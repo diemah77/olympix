@@ -16,7 +16,11 @@ class DatabaseSeeder extends Seeder
         $this->call(ChampionshipTypesSeeder::class);
         $this->call(ResultSeeder::class);
         $this->call(QualifiedSeeder::class);
-        $this->call(TournamentSeeder::class);
+
+        if (app()->environment() == 'local')
+        {
+            $this->call(TournamentSeeder::class);
+        }
     }
 }
 
