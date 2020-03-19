@@ -1,9 +1,9 @@
 <template>
 <admin-layout>
 	<template slot="title">
-		<h1 class="flex h-full items-center pl-6 text-xl text-blue-500 font-thin uppercase bg-black-10">
-            <icon class="mr-2" icon="trophy" fixed-width></icon>
-            {{ $page.t ? $page.t.name : 'Olympix' }}
+		<h1 class="flex h-full items-center pl-2 text-xl text-blue-500 font-thin uppercase bg-black-10">
+            <img class="w-8 mr-2" src="/img/olympix.png">
+            <span>{{ $page.t ? $page.t.name : 'Olympix' }}</span>
         </h1>
 	</template>
 

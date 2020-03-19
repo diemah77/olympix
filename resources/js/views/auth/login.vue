@@ -5,9 +5,9 @@
             <div class="flex rounded-lg shadow-lg w-full sm:w-3/4 lg:w-3/5 bg-white sm:mx-0" style="height: 500px">
                 <div class="flex flex-col w-full md:w-2/5 p-4">
                     <div class="flex flex-col flex-1 justify-center mb-8">
-                        <h1 class="text-4xl text-center font-thin">
-                            <!-- <icon class="mr-2" icon="trophy" fixed-width></icon> -->
-                            Olympix
+                        <h1 class="flex text-4xl justify-center font-thin">
+                            <img class="w-12 mr-2" src="/img/olympix.png">
+                            <span>Olympix</span>
                         </h1>
 
                         <div class="w-full mt-4">
@@ -60,7 +60,7 @@ export default {
     methods: {
         submit()
         {
-            axios.post(route('login.attempt'), this.form).then(() => this.$inertia.visit(route('home')))
+            this.$inertia.post(route('login.attempt'), this.form).then(() => console.log('login'))
         }
     }
 }
