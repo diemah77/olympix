@@ -1,0 +1,99 @@
+
+import Vue from 'vue'
+import { InertiaApp } from '@inertiajs/inertia-vue'
+import axios from 'axios'
+import ElementUI from 'element-ui'
+import Box from '@/components/box'
+import Status from '@/components/status'
+import Page from '@/views/partials/page'
+import { library } from '@fortawesome/fontawesome-svg-core'
+
+import {
+    faAngleDown,
+    faAngleUp,
+    faBars,
+    faCheck,
+    faChevronDown,
+    faClipboardList,
+    faClock,
+    faCodeBranch,
+    faCogs,
+    faEdit,
+    faEye,
+    faHome,
+    faLightbulb,
+    faList,
+    faLongArrowAltLeft,
+    faLongArrowAltRight,
+    faPlay,
+    faPlus,
+    faRandom,
+    faTable,
+    faTimes,
+    faTrophy,
+    faUndo,
+    faUsers
+} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
+library.add(
+    faAngleDown,
+    faAngleUp,
+    faBars,
+    faCheck,
+    faChevronDown,
+    faClipboardList,
+    faClock,
+    faCodeBranch,
+    faCogs,
+    faEdit,
+    faEye,
+    faHome,
+    faLightbulb,
+    faList,
+    faLongArrowAltLeft,
+    faLongArrowAltRight,
+    faPlay,
+    faPlus,
+    faRandom,
+    faTable,
+    faTimes,
+    faTrophy,
+    faUndo,
+    faUsers
+)
+
+window.axios = axios
+window.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.head.querySelector('meta[name="csrf-token"]').content
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+
+Vue.use(ElementUI, {size: 'medium'})
+Vue.use(InertiaApp)
+Vue.component('box', Box)
+Vue.component('page', Page)
+Vue.component('status', Status)
+Vue.component('icon', FontAwesomeIcon)
+Vue.component('icon-layers', FontAwesomeLayers)
+
+Vue.config.productionTip = false
+
+const app = document.getElementById('app')
+const data = JSON.parse(app.dataset.page)
+
+Vue.mixin({
+    methods: {
+        route: route,
+        // can(permission)
+        // {
+        //     return data.props.auth.permissions.some(p => p.name == permission)
+        // }
+    }
+})
+
+new Vue({
+    render: h => h(InertiaApp, {
+        props: {
+            initialPage: data,
+            resolveComponent: name => require(`@/views/${name}`).default
+        },
+    }),
+}).$mount(app)

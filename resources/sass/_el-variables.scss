@@ -1,0 +1,54 @@
+
+  @import "colors";
+
+  $--font-path: 'fonts';
+  $--color-primary: $colors-blue-500;
+  $--color-warning: $colors-orange-500;
+  $--color-danger: $colors-red-500;
+  $--color-success: $colors-green-500;
+  $--color-info: $colors-gray-600;
+  $--color-text-primary: $colors-gray-800;
+  $--color-text-regular: $colors-gray-700;
+  $--table-header-color: $colors-gray-800;
+  $--table-text-color: $colors-gray-800;
+  $--table-header-font-color: $colors-gray-800;
+
+  @import "node_modules/element-ui/packages/theme-chalk/src/base";
+  @import "node_modules/element-ui/packages/theme-chalk/src/alert";
+  @import "node_modules/element-ui/packages/theme-chalk/src/button";
+  @import "node_modules/element-ui/packages/theme-chalk/src/checkbox";
+  @import "node_modules/element-ui/packages/theme-chalk/src/checkbox-button";
+  @import "node_modules/element-ui/packages/theme-chalk/src/dialog";
+  @import "node_modules/element-ui/packages/theme-chalk/src/dropdown";
+  @import "node_modules/element-ui/packages/theme-chalk/src/dropdown-item";
+  @import "node_modules/element-ui/packages/theme-chalk/src/dropdown-menu";
+  @import "node_modules/element-ui/packages/theme-chalk/src/date-picker";
+  @import "node_modules/element-ui/packages/theme-chalk/src/icon";
+  @import "node_modules/element-ui/packages/theme-chalk/src/input";
+  @import "node_modules/element-ui/packages/theme-chalk/src/input-number";
+  @import "node_modules/element-ui/packages/theme-chalk/src/loading";
+  @import "node_modules/element-ui/packages/theme-chalk/src/option";
+  @import "node_modules/element-ui/packages/theme-chalk/src/message";
+  @import "node_modules/element-ui/packages/theme-chalk/src/message-box";
+  @import "node_modules/element-ui/packages/theme-chalk/src/pagination";
+  @import "node_modules/element-ui/packages/theme-chalk/src/notification";
+  @import "node_modules/element-ui/packages/theme-chalk/src/popover";
+  @import "node_modules/element-ui/packages/theme-chalk/src/radio";
+  @import "node_modules/element-ui/packages/theme-chalk/src/radio-button";
+  @import "node_modules/element-ui/packages/theme-chalk/src/radio-group";
+  @import "node_modules/element-ui/packages/theme-chalk/src/select";
+  @import "node_modules/element-ui/packages/theme-chalk/src/switch";
+  @import "node_modules/element-ui/packages/theme-chalk/src/table";
+  @import "node_modules/element-ui/packages/theme-chalk/src/table-column";
+  @import "node_modules/element-ui/packages/theme-chalk/src/tabs";
+  @import "node_modules/element-ui/packages/theme-chalk/src/tab-pane";
+  @import "node_modules/element-ui/packages/theme-chalk/src/tag";
+  @import "node_modules/element-ui/packages/theme-chalk/src/time-select";
+
+.el-input__inner::placeholder {
+    opacity: 1;
+}
+
+.el-table th, .el-table td {
+    padding: 10px 0;
+}

@@ -1,0 +1,93 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Player;
+use App\Tournament;
+use Inertia\Inertia;
+use App\Http\Controllers\Controller;
+
+class PlayerController extends Controller
+{
+    public function index(Tournament $tournament)
+    {
+        return Inertia::render('players/index', [
+            'initialPlayers' => $tournament->players->transform(function($p)
+            {
+                return [
+                    'id' => $p->id,
+                    'fullname' => $p->fullname(),
+                    'ttr' => $p->ttr
+                ];
+            })
+        ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('players/edit', [
+            'player' => [
+                'firstname' => '',
+                'lastname' => '',
+                'ttr' => '',
+            ],
+            'mode' => 'create'
+        ]);
+    }
+
+    public function store(Tournament $tournament)
+    {
+        $data = $this->validate(request(), [
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'ttr' => 'required|numeric|min:800'
+        ]);
+
+        $player = $tournament->players()->create($data);
+
+        return response(['id' => $player->id], 201);
+    }
+
+    public function edit(Tournament $tournament, Player $player)
+    {
+        return Inertia::render('players/edit', [
+            'player' => [
+                'id' => $player->id,
+                'firstname' => $player->firstname,
+                'lastname' => $player->lastname,
+                'fullname' => $player->firstname . ' ' . $player->lastname,
+                'ttr' => $player->ttr,
+                'championships' => $player->championships // TODO: transform
+            ],
+            'championships' => $tournament->championships,
+            'mode' => 'edit'
+        ]);
+    }
+
+    public function update(Tournament $tournament, Player $player)
+    {
+        $data = $this->validate(request(), [
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'ttr' => 'required|numeric|min:800'
+        ]);
+
+        $player->update($data);
+
+        return response('OK', 200);
+    }
+
+    public function random(Tournament $tournament)
+    {
+        $players = factory(Player::class, intval(request()->count))->create(['tournament_id' => $tournament->id]);
+
+        return $players->transform(function($p)
+        {
+            return [
+                'id' => $p->id,
+                'fullname' => $p->fullname(),
+                'ttr' => $p->ttr
+            ];
+        });
+    }
+}

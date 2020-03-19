@@ -1,0 +1,212 @@
+<template>
+<div class="nav text-sm">
+	<inertia-link
+		class="link pl-8 pr-4 py-4 mb-8 font-bold flex items-center hover:bg-black-10 hover:text-white"
+		:class="{'bg-black-10 text-white orange-inset': route().current('tournaments.index'), 'text-blue-200': !route().current('tournaments.index')}"
+		:href="route('tournaments.index')">
+
+        <icon v-if="$page.t" class="mr-1" icon="long-arrow-alt-left" fixed-width></icon>
+        <span>{{ $page.t ? 'Zu meinen Turnieren' : 'Meine Turniere' }}</span>
+	</inertia-link>
+
+    <transition-group name="fade">
+		<template v-if="$page.t">
+            <inertia-link
+                key="0"
+                class="link pl-8 pr-4 py-4 font-bold flex items-center hover:bg-black-10 hover:text-white"
+                :class="{'bg-black-10 text-white orange-inset': route().current('tournaments.edit'), 'text-blue-200': !route().current('tournaments.edit')}"
+                :href="route('tournaments.edit', [this.$page.t.id])">
+
+                <icon class="mr-2" icon="cogs" fixed-width></icon>
+                <span>Einstellungen</span>
+            </inertia-link>
+
+            <div key="1" :class="{ 'bg-black-10 orange-inset': contains('championships'), 'bg-black-10': championshipOpened}">
+                <span
+                    @click.prevent="championshipOpened = !championshipOpened"
+                    class="cursor-pointer pl-8 pr-4 py-4 font-bold flex items-center hover:bg-black-10 hover:text-white"
+                    :class="{'text-white': contains('championships'), 'text-blue-200': !contains('championships') }">
+
+                    <icon class="mr-2" icon="clipboard-list" fixed-width></icon>
+                    <span>Spielklassen</span>
+                    <icon class="ml-auto" :icon="championshipAngle"></icon>
+                </span>
+
+                <transition-expand>
+                    <div v-show="championshipOpened">
+                        <inertia-link
+                            class="link pl-16 pr-4 py-4 flex items-center hover:bg-black-10 hover:text-white"
+                            :class="{'bg-black-10 text-white': route().current('championships.create', [$page.t.id]), 'text-blue-200': !route().current('championships.create', [$page.t.id])}"
+                            :href="route('championships.create', [$page.t.id])">
+
+                            <span>Neue Spielklasse</span>
+                        </inertia-link>
+
+                        <inertia-link
+                            class="link pl-16 pr-4 py-4 flex items-center hover:bg-black-10 hover:text-white"
+                            :class="{'bg-black-10 text-white': route().current('championships.index'), 'text-blue-200': !route().current('championships.index')}"
+                            :href="route('championships.index', [$page.t.id])">
+
+                            <span>Übersicht</span>
+                        </inertia-link>
+
+                        <div v-if="$page.t.championships.length > 0">
+                            <inertia-link
+                                v-for="championship in $page.t.championships"
+                                :key="championship.id"
+                                class="link pl-16 pr-4 py-4 flex items-center hover:bg-black-10 hover:text-white"
+                                :class="{'bg-black-10 text-white': contains('championships/' + championship.id), 'text-blue-200': !contains('championships/' + championship.id)}"
+                                :href="route('championships.edit', [$page.t.id, championship.id])">
+
+                                <span>{{ championship.name }}</span>
+                            </inertia-link>
+                        </div>
+                    </div>
+                </transition-expand>
+            </div>
+
+            <!-- <inertia-link
+                key="1"
+                class="link pl-8 pr-4 py-4 font-bold flex items-center hover:bg-black-10 hover:text-white"
+                :class="{'bg-black-10 text-white orange-inset': isChampionshipsRoute, 'text-blue-200': !isChampionshipsRoute}"
+                :href="route('championships.index', [this.$page.t.id])">
+
+                <icon class="mr-2" icon="clipboard-list" fixed-width></icon>
+                <span>Spielklassen</span>
+            </inertia-link> -->
+
+            <inertia-link
+                key="2"
+                class="link pl-8 pr-4 py-4 font-bold flex items-center hover:bg-black-10 hover:text-white"
+                :class="{'bg-black-10 text-white orange-inset': route().current('players.*'), 'text-blue-200': !route().current('players.*')}"
+                :href="route('players.index', [$page.t.id])">
+
+                <icon class="mr-2" icon="users" fixed-width></icon>
+                <span>Spieler</span>
+            </inertia-link>
+
+            <!-- <inertia-link
+                v-if="$page.t.started_championships_count > 0"
+                key="3"
+                class="link pl-8 pr-4 py-4 font-bold flex items-center hover:bg-black-10 hover:text-white"
+                :class="{'bg-black-10 text-white orange-inset': route().current('schedule.*'), 'text-blue-200': !route().current('schedule.*')}"
+                :href="route('schedule.index', [$page.t.id])">
+
+                <icon class="mr-2" icon="clock" fixed-width></icon>
+                <span>Spielplan</span>
+            </inertia-link> -->
+
+            <div
+                key="3"
+                :class="{ 'bg-black-10 orange-inset': contains('schedule'), 'bg-black-10': scheduleOpened}"
+                v-if="$page.t.started_championships_count > 0">
+                <span
+                    @click.prevent="scheduleOpened = !scheduleOpened"
+                    class="cursor-pointer pl-8 pr-4 py-4 font-bold flex items-center hover:bg-black-10 hover:text-white"
+                    :class="{'text-white': contains('schedule'), 'text-blue-200': !contains('schedule') }">
+
+                    <icon class="mr-2" icon="clock" fixed-width></icon>
+                    <span>Spielplan</span>
+                    <icon class="ml-auto" :icon="scheduleAngle"></icon>
+                </span>
+
+                <transition-expand>
+                    <div v-show="scheduleOpened">
+                        <inertia-link
+                            class="link pl-16 pr-4 py-4 flex items-center hover:bg-black-10 hover:text-white"
+                            :class="{'bg-black-10 text-white': route().current('schedule.index'), 'text-blue-200': !route().current('schedule.index')}"
+                            :href="route('schedule.index', [$page.t.id])">
+
+                            <span>Übersicht</span>
+                        </inertia-link>
+
+                        <div v-if="$page.t.championships.length > 0">
+                            <inertia-link
+                                v-for="championship in $page.t.championships"
+                                :key="championship.id"
+                                class="link pl-16 pr-4 py-4 flex items-center hover:bg-black-10 hover:text-white"
+                                :class="{'bg-black-10 text-white': contains('schedule/' + championship.id), 'text-blue-200': !contains('schedule/' + championship.id)}"
+                                :href="route('schedule.show', [$page.t.id, championship.id])">
+
+                                <span>{{ championship.name }}</span>
+                            </inertia-link>
+                        </div>
+                    </div>
+                </transition-expand>
+            </div>
+
+			<!--<router-link
+				key="4"
+				:to="{name: 'viewer.index'}"
+				tag="li">
+
+				<a class="nav-link link text-white px-8 py-4 font-bold flex items-center hover:bg-black-10">
+					<span>Viewer</span>
+				</a>
+			</router-link> -->
+		</template>
+	</transition-group>
+</div>
+</template>
+
+<script>
+import TransitionExpand from '@/components/transition-expand'
+
+export default {
+    components: {
+		TransitionExpand
+    },
+
+    props: {
+        url: String,
+    },
+
+    data()
+    {
+        return {
+            championshipOpened: false,
+            scheduleOpened: false
+        }
+    },
+
+    computed: {
+        championshipAngle()
+		{
+			return this.championshipOpened ? 'angle-up': 'angle-down'
+        },
+
+        scheduleAngle()
+		{
+			return this.scheduleOpened ? 'angle-up': 'angle-down'
+        },
+
+        isChampionshipsRoute()
+        {
+            return this.contains('championships')
+        }
+    },
+
+    methods: {
+        contains(matches)
+		{
+			const paths = Array.isArray(matches) ? matches : [matches]
+
+		    return paths.some(path =>
+		    {
+		    	return location.pathname.indexOf(path) > -1
+		    })
+		},
+
+        setOpened(route)
+        {
+			this.championshipOpened = this.contains(['/championships'])
+			this.scheduleOpened = this.contains(['/schedule'])
+        }
+    },
+
+    created()
+	{
+		this.setOpened()
+	}
+}
+</script>
