@@ -37,7 +37,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="hidden md:block md:w-3/5 rounded-r-lg" style="background: url('/img/bg.jpeg'); background-size: cover; background-position: center center;"></div>
+                <div class="hidden md:block md:w-3/5 rounded-r-lg" style="background: url('/img/bg.jpg'); background-size: cover; background-position: center center;"></div>
             </div>
         </div>
     </div>
