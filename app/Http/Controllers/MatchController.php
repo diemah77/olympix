@@ -35,12 +35,8 @@ class MatchController extends Controller
     {
         $rules = [
             'result_id' => 'required|integer',
+            'sets' => ['required', new ValidMatchSets(request()->result_id)]
         ];
-
-        if ($match->matchable->phase->phase->isGroup())
-        {
-            $rules['sets'] = ['required', new ValidMatchSets(request()->result_id)];
-        }
 
         $this->validate(request(), $rules);
 

@@ -63,7 +63,6 @@ library.add(
 )
 
 window.axios = axios
-// window.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.head.querySelector('meta[name="csrf-token"]').content
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 
 Vue.use(ElementUI, {size: 'medium'})
@@ -81,11 +80,7 @@ const data = JSON.parse(app.dataset.page)
 
 Vue.mixin({
     methods: {
-        route: route,
-        // can(permission)
-        // {
-        //     return data.props.auth.permissions.some(p => p.name == permission)
-        // }
+        route: route
     }
 })
 

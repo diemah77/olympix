@@ -137,9 +137,9 @@ export default {
             }
             else
             {
-                axios.post(route('championships.store', [this.$page.t.id]), this.form).then(response =>
+                axios.post(route('championships.store', [this.$page.t.id]).url(), this.form).then(response =>
                 {
-                    this.$inertia.visit(route('championships.edit', [this.$page.t.id, response.data.id]))
+                    this.$inertia.visit(route('championships.edit', [this.$page.t.id, response.data.id]).url())
                 })
                 .catch(error => this.errors = error.response.data.errors)
             }
@@ -149,7 +149,7 @@ export default {
         {
             this.players.map(p => p.isRegistered = true)
 
-            axios.post(route('registrations.store-all', [this.$page.t.id, this.form.id]), {players: this.players}).then(response =>
+            axios.post(route('registrations.store-all', [this.$page.t.id, this.form.id]).url(), {players: this.players}).then(response =>
         	{
         		this.registrations = response.data.registrations
         		this.registrations_count = response.data.registrations.length
@@ -163,21 +163,16 @@ export default {
 
         	if (toBeRegistered)
         	{
-        		service = axios.post(route('registrations.store', [this.$page.t.id, this.form.id, player.id]))
+        		service = axios.post(route('registrations.store', [this.$page.t.id, this.form.id, player.id]).url())
         		msg = 'Spieler gemeldet!'
         	}
         	else
         	{
-        		service = axios.delete(route('registrations.destroy', [this.$page.t.id, this.form.id, player.id]))
+        		service = axios.delete(route('registrations.destroy', [this.$page.t.id, this.form.id, player.id]).url())
         		msg = 'Spieler abgemeldet!'
         	}
 
         	service.then(response => {
-        		// this.getParticipants().then(res =>
-        		// {
-                // 	this.championship.participants = res.data
-                // axios.get(route('participants.index', [this.$page.t.id, this.form.id]).then
-
         			if (toBeRegistered)
 	        		{
                         // player.isRegistered = true

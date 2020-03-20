@@ -103,7 +103,7 @@
                             @change="handleResultUpdate(match)">
 
                             <el-option
-                                v-for="item in results"
+                                v-for="item in championshipResults"
                                 :key="item.id"
                                 :label="item.label"
                                 :value="item.id">
@@ -164,13 +164,17 @@
 <script>
 import sort from 'fast-sort'
 import admin from '@/views/layouts/admin'
+import validation from '@/mixins/validation'
 
 export default {
     layout: (h, page) => h(admin, {props: {title: 'Übersicht'}} ,  [page]),
 
+    mixins: [validation],
+
     props: {
         matches: Array,
         tables: Array,
+        results: Array
     },
 
     remember: 'form',
@@ -218,6 +222,16 @@ export default {
         {
             return this.orderedTables.filter(t => t.busy == false)
         },
+
+        setsCount()
+        {
+            return this.match.result_id ? this.results.find(r => r.id == this.match.result_id).setCount : this.match.winningSets
+        },
+
+        championshipResults()
+        {
+            return this.results.filter(r => r.size == this.match.setsCount)
+        },
     },
 
     methods: {
@@ -234,6 +248,65 @@ export default {
             {
                 return 'bg-blue-100'
             }
+        },
+
+         handleResultUpdate(match)
+        {
+            this.clear('result_id')
+            this.updateSets(match)
+        },
+
+        handleResultClear(match)
+        {
+            this.clear('sets')
+            match.sets.forEach(s => s.points = "")
+        },
+
+        updateSets(match)
+        {
+            let diff = this.setsCount - match.sets.length
+
+            if (diff > 0)
+            {
+                for (let i = 1; i <= diff; i++)
+                {
+                    match.sets.push({ points: ''})
+                }
+            }
+            else if (diff < 0)
+            {
+                for (let i = 1; i <= Math.abs(diff); i++)
+                {
+                    match.sets.pop()
+                }
+            }
+        },
+
+        startMatch()
+        {
+            axios.post(route('matches.start', [this.$page.t.id, this.match.championship_id, this.match.id]).url(), this.match).then(response =>
+            {
+                this.dialogVisible = false
+                this.$inertia.reload()
+            })
+            .catch(error => console.log(error.response))
+        },
+
+        stopMatch()
+        {
+            axios.post(route('matches.stop', [this.$page.t.id, this.match.championship_id, this.match.id]).url(), this.match).then(response =>
+            {
+                this.dialogVisible = false
+                this.$inertia.reload()
+            })
+            .catch(error => this.errors = error.response.data.errors)
+        },
+
+        show(match)
+        {
+            this.match = JSON.parse(JSON.stringify(match))
+            this.dialogTitle = 'Spiel ' + match.id + ' - ' + match.championship
+            this.dialogVisible = true
         },
 
         resetDialog()

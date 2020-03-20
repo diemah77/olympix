@@ -175,7 +175,7 @@ return [
         'time'                  => 'Uhrzeit',
         'available'             => 'verfügbar',
         'size'                  => 'Größe',
-        'table_count'           => 'Anzahl Tische',
+        'tables_count'           => 'Anzahl Tische',
         'sets'                  => 'Sätze',
         'result_id'             => 'Ergebnis',
         'system_id'             => 'Spielsystem',

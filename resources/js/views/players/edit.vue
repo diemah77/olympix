@@ -91,7 +91,7 @@ export default {
         {
             if (event)
             {
-                axios.post(route('registrations.store', [this.$page.t.id, championship.id, this.form.id])).then(() =>
+                axios.post(route('registrations.store', [this.$page.t.id, championship.id, this.form.id]).url()).then(() =>
                 {
                     this.form.championships.push(championship)
                     this.$message.success('Spieler gemeldet!')
@@ -99,7 +99,7 @@ export default {
             }
             else
             {
-                axios.delete(route('registrations.destroy', [this.$page.t.id, championship.id, this.form.id])).then(() =>
+                axios.delete(route('registrations.destroy', [this.$page.t.id, championship.id, this.form.id]).url()).then(() =>
                 {
                     this.form.championships.filter(c => c.id != championship.id)
                     this.$message.success('Spieler abgemeldet!')
@@ -116,7 +116,7 @@ export default {
         {
             if (this.mode == 'edit')
             {
-                axios.put(route('players.update', [this.$page.t.id, this.form.id]), this.form).then(() =>
+                axios.put(route('players.update', [this.$page.t.id, this.form.id]).url(), this.form).then(() =>
                 {
                     this.$message.success('Spieler aktualisiert.')
                 })
@@ -124,9 +124,9 @@ export default {
             }
             else
             {
-                axios.post(route('players.store', [this.$page.t.id]), this.form).then(response =>
+                axios.post(route('players.store', [this.$page.t.id]).url(), this.form).then(response =>
                 {
-                    this.$inertia.visit(route('players.edit', [this.$page.t.id, response.data.id]))
+                    this.$inertia.visit(route('players.edit', [this.$page.t.id, response.data.id]).url())
                 })
                 .catch(error => this.errors = error.response.data.errors)
             }

@@ -128,7 +128,7 @@ export default {
         {
             if (this.newPlayers == 0) return this.showPopover = false
 
-            axios.post(route('players.random', [this.$page.t.id]), {count: this.newPlayers}).then(response =>
+            axios.post(route('players.random', [this.$page.t.id]).url(), {count: this.newPlayers}).then(response =>
             {
                 response.data.forEach(p => this.players.push(p))
                 this.showPopover = false
@@ -140,11 +140,6 @@ export default {
             this.sortCol = data.prop
             this.sortDir = data.order == 'ascending' ? 'asc' : 'desc'
         }
-	},
-
-    beforeRouteEnter(to, from, next)
-    {
-        PlayerService.all(to.params.tournament).then(response => next(vm => vm.players = response.data))
-    }
+	}
 }
 </script>

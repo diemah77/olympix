@@ -295,7 +295,7 @@ export default {
 
         startMatch()
         {
-            axios.post(route('matches.start', [this.$page.t.id, this.championship.id, this.match.id]), this.match).then(response =>
+            axios.post(route('matches.start', [this.$page.t.id, this.championship.id, this.match.id]).url(), this.match).then(response =>
             {
                 this.dialogVisible = false
                 this.$inertia.reload()
@@ -305,7 +305,7 @@ export default {
 
         stopMatch()
         {
-            axios.post(route('matches.stop', [this.$page.t.id, this.championship.id, this.match.id]), this.match).then(response =>
+            axios.post(route('matches.stop', [this.$page.t.id, this.championship.id, this.match.id]).url(), this.match).then(response =>
             {
                 this.dialogVisible = false
                 this.$inertia.reload()

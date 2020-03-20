@@ -127,7 +127,7 @@ export default {
         {
             if (this.mode == 'edit')
             {
-                axios.put(route('championships.update', [this.$page.t.id, this.form.id]), this.form).then(() =>
+                axios.put(route('championships.update', [this.$page.t.id, this.form.id]).url(), this.form).then(() =>
                 {
                     this.$message.success('Spielklasse aktualisiert.')
                 })
@@ -135,9 +135,9 @@ export default {
             }
             else
             {
-                axios.post(route('championships.store', [this.$page.t.id]), this.form).then(response =>
+                axios.post(route('championships.store', [this.$page.t.id]).url(), this.form).then(response =>
                 {
-                    this.$inertia.visit(route('championships.edit', [this.$page.t.id, response.data.id]))
+                    this.$inertia.visit(route('championships.edit', [this.$page.t.id, response.data.id]).url())
                 })
                 .catch(error => this.errors = error.response.data.errors)
             }
@@ -171,7 +171,7 @@ export default {
 
         updateAllSeedings()
         {
-            axios.put(route('participants.update', [this.$page.t.id, this.form.id]), {participants: this.participants}).then(() => this.$message.success('Setzung aktualisiert!'))
+            axios.put(route('participants.update', [this.$page.t.id, this.form.id]).url(), {participants: this.participants}).then(() => this.$message.success('Setzung aktualisiert!'))
         }
     }
 }

@@ -3,13 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Phase;
-use App\Round;
-use App\Group;
 use App\Single;
 use App\Double;
 use App\Result;
 use App\Tournament;
-use App\Participant;
 use Inertia\Inertia;
 use App\Championship;
 use App\Http\Controllers\Controller;
@@ -30,6 +27,9 @@ class ScheduleController extends Controller
             return [
                 'id' => $m->id,
                 'championship' => $m->championship->name,
+                'championship_id' => $m->championship->id,
+                'winningSets' => $m->championship->winningSets(),
+                'setsCount' => $m->championship->sets,
                 'phase' => $m->matchable->phase->phase->name(),
                 'matchable' => $m->matchable->getName(),
                 'p1' => $m->p1 ? $m->p1->fullname() : '',
@@ -46,13 +46,14 @@ class ScheduleController extends Controller
 
         return Inertia::render('schedule/index', [
             'matches' => $matches,
-            'tables' => $tournament->tables->only('id', 'name', 'busy'),
+            'tables' => $tournament->tables,
             'results' => Result::all()->transform(function($r)
             {
                 return [
                     'id' => $r->id,
                     'label' => $r->label(),
-                    'setCount' => $r->setCount()
+                    'setCount' => $r->setCount(),
+                    'size' => $r->size
                 ];
             }),
         ]);
@@ -74,7 +75,7 @@ class ScheduleController extends Controller
                 'statusName' => $m->statusName(),
                 'isStarted' => $m->isStarted(),
                 'isFinished' => $m->isFinished(),
-                'relevant' => $m->isStarted() || ($hasFreeTables && $m->isRegular()),
+                'relevant' => $m->isStarted() || ($hasFreeTables && $m->isRegular() && !$m->isFinished()),
                 'p1' => $m->p1 ? $m->p1->fullname() : '',
                 'p2' => $m->p2 ? $m->p2->fullname() : '',
                 'phase' => $m->matchable->phase->phase->name(),

@@ -94,7 +94,7 @@ export default {
 
         drawDoubles()
 		{
-			axios.post(route('doubles.store', [this.$page.t.id, this.championship.id]), {mode: this.championship.doubles_draw_type}).then(response =>
+			axios.post(route('doubles.store', [this.$page.t.id, this.championship.id]).url(), {mode: this.championship.doubles_draw_type}).then(response =>
 			{
 				this.$inertia.reload()
 			})

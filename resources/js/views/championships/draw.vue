@@ -175,7 +175,7 @@ export default {
         {
             if (this.mode == 'edit')
             {
-                axios.put(route('championships.update', [this.$page.t.id, this.form.id]), this.form).then(() =>
+                axios.put(route('championships.update', [this.$page.t.id, this.form.id]).url(), this.form).then(() =>
                 {
                     this.$message.success('Spielklasse aktualisiert.')
                 })
@@ -183,9 +183,9 @@ export default {
             }
             else
             {
-                axios.post(route('championships.store', [this.$page.t.id]), this.form).then(response =>
+                axios.post(route('championships.store', [this.$page.t.id]).url(), this.form).then(response =>
                 {
-                    this.$inertia.visit(route('championships.edit', [this.$page.t.id, response.data.id]))
+                    this.$inertia.visit(route('championships.edit', [this.$page.t.id, response.data.id]).url())
                 })
                 .catch(error => this.errors = error.response.data.errors)
             }
@@ -231,7 +231,7 @@ export default {
 		{
             this.drawLoading = true
 
-            axios.post(route('draws.store', [this.$page.t.id, this.championship.id, phase.id]), phase).then(response =>
+            axios.post(route('draws.store', [this.$page.t.id, this.championship.id, phase.id]).url(), phase).then(response =>
             {
                 this.$set(this.phases, index, response.data)
                 this.drawLoading = false
@@ -244,7 +244,7 @@ export default {
 		{
             this.resetLoading = true
 
-            axios.delete(route('draws.destroy', [this.$page.t.id, this.championship.id, phase.id])).then(response =>
+            axios.delete(route('draws.destroy', [this.$page.t.id, this.championship.id, phase.id]).url()).then(response =>
             {
                 this.$set(this.phases, index, response.data)
                 this.resetLoading = false
@@ -255,10 +255,9 @@ export default {
 
         start(phase, index)
 		{
-            axios.post(route('phases.start', [this.$page.t.id, this.championship.id, phase.id])).then(response =>
+            axios.post(route('phases.start', [this.$page.t.id, this.championship.id, phase.id]).url()).then(response =>
             {
                 phase.isStarted = true
-                // this.$set(this.phases, index, response.data)
                 this.$message.success('Phase gestartet!')
             })
 		},

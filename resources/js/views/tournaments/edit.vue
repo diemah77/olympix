@@ -71,7 +71,7 @@ export default {
     methods: {
         save()
         {
-            const request = this.mode == 'edit' ? axios.put(route('tournaments.update', this.form.id), this.form) : axios.post(route('tournaments.store'), this.form)
+            const request = this.mode == 'edit' ? axios.put(route('tournaments.update', this.form.id).url(), this.form) : axios.post(route('tournaments.store').url(), this.form)
 
             request.then(response =>
             {

@@ -111,7 +111,7 @@ export default {
 		{
             this.drawLoading = true
 
-            axios.post(route('draws.store', [this.$page.t.id, this.championship.id, this.form.id]), this.form).then(response =>
+            axios.post(route('draws.store', [this.$page.t.id, this.championship.id, this.form.id]).url(), this.form).then(response =>
             {
                 this.$inertia.reload()
                 this.drawLoading = false
@@ -128,7 +128,7 @@ export default {
 		{
             this.resetLoading = true
 
-            axios.delete(route('draws.destroy', [this.$page.t.id, this.championship.id, this.form.id])).then(response =>
+            axios.delete(route('draws.destroy', [this.$page.t.id, this.championship.id, this.form.id]).url()).then(response =>
             {
                 this.resetLoading = false
                 this.$inertia.reload()
@@ -138,7 +138,7 @@ export default {
 
         start()
 		{
-            axios.post(route('phases.start', [this.$page.t.id, this.championship.id, this.form.id])).then(response =>
+            axios.post(route('phases.start', [this.$page.t.id, this.championship.id, this.form.id]).url()).then(response =>
             {
                 this.$inertia.reload()
                 this.$message.success('Phase gestartet!')
