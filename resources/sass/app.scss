@@ -12,6 +12,7 @@ html {
 
 /* purgecss start ignore */
 @import "el-variables";
+@import "node_modules/swiper/css/swiper.min";
 
 .scrollbar-thumb {
     background-color: theme('colors.blue.600') !important;

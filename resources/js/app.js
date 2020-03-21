@@ -7,6 +7,7 @@ import Box from '@/components/box'
 import Status from '@/components/status'
 import Page from '@/views/partials/page'
 import { library } from '@fortawesome/fontawesome-svg-core'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
 
 import {
     faAngleDown,
@@ -14,6 +15,8 @@ import {
     faBars,
     faCheck,
     faChevronDown,
+    faChevronLeft,
+    faChevronRight,
     faClipboardList,
     faClock,
     faCodeBranch,
@@ -41,6 +44,8 @@ library.add(
     faBars,
     faCheck,
     faChevronDown,
+    faChevronLeft,
+    faChevronRight,
     faClipboardList,
     faClock,
     faCodeBranch,
@@ -65,8 +70,10 @@ library.add(
 window.axios = axios
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 
-Vue.use(ElementUI, {size: 'medium'})
 Vue.use(InertiaApp)
+Vue.use(ElementUI, {size: 'medium'})
+Vue.use(VueAwesomeSwiper)
+
 Vue.component('box', Box)
 Vue.component('page', Page)
 Vue.component('status', Status)

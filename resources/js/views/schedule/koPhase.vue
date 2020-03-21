@@ -1,9 +1,14 @@
 <template>
 <div class="">
-    <brackets
+    <!-- <brackets
         v-if="phase.rounds.length > 0"
         :rounds="phase.rounds">
-    </brackets>
+    </brackets> -->
+
+    <brackets-slider
+        v-if="phase.rounds.length > 0"
+        :rounds="phase.rounds">
+    </brackets-slider>
 
     <el-alert
         v-else
@@ -20,6 +25,7 @@
 import admin from '@/views/layouts/admin'
 import schedule from '@/views/layouts/schedule'
 import Brackets from '@/components/brackets'
+import BracketsSlider from '@/components/bracketsSlider'
 
 export default {
      props : {
@@ -28,7 +34,8 @@ export default {
     },
 
     components: {
-        Brackets
+        Brackets,
+        BracketsSlider
     },
 
     layout: (h, page) => {

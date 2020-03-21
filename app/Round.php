@@ -74,7 +74,7 @@ class Round extends Model
     {
         if (is_null($this->name)) return $this->typeName();
 
-        return $this->isWinner() ? $this->name : "DoKo {$this->name}";
+        return $this->isWinner() ? $this->name : "Verlierer {$this->name}";
     }
 
     public function isWinner()
