@@ -94,7 +94,7 @@ export default {
             const winnersCount = this.rounds.filter(r => r.isWinner).length
             const losersCount = this.rounds.filter(r => !r.isWinner).length
 
-            return Math.max(winnersCount, losersCount) - 3
+            return Math.max(1, Math.max(winnersCount, losersCount) - 3)
         }
     },
 
