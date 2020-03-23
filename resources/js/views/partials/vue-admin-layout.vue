@@ -12,7 +12,7 @@
     	<slot name="header"></slot>
     </header>
 
-    <main class="main">
+    <main ref="main" class="main">
 		<slot name="main"></slot>
 	</main>
 </div>
@@ -25,6 +25,7 @@ export default {
     mounted()
     {
         Scrollbar.init(this.$refs.sidebar)
+        Scrollbar.init(this.$refs.main)
     }
 }
 </script>

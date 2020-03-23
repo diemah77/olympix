@@ -38,7 +38,7 @@ class Double extends Model
 
     public function ttr()
     {
-        return $this->r1->player->ttr + $this->r2->player->ttr;
+        return intval(($this->r1->player->ttr + $this->r2->player->ttr) / 2);
     }
 
     public function fullname()

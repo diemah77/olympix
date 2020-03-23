@@ -38,9 +38,11 @@ class ChampionshipController extends Controller
                 'name' => '',
                 'system_id' => '',
                 'third_place' => false,
+                'handicap' => false,
                 'type_id' => '',
                 'sets' => '',
                 'setsList' => $championship->setsList(),
+                'handicaps' => $championship->getHandicaps(),
                 'mode' => 'create',
             ],
             'systems' => ChampionshipSystem::all(),
@@ -57,25 +59,32 @@ class ChampionshipController extends Controller
             'third_place' => '',
             'type_id' => 'required',
             'sets' => 'required',
+            'handicap' => ''
         ]);
 
         $championship = $tournament->championships()->create($data);
+
+        if ($data['handicap'])
+        {
+            $championship->saveHandicaps(request()->handicaps);
+        }
 
         return response(['id' => $championship->id], 200);
     }
 
     public function edit(Tournament $tournament, Championship $championship)
     {
-        // dd($championship->phases);
         return Inertia::render('championships/edit', [
             'championship' => [
                 'id' => $championship->id,
                 'name' => $championship->name,
                 'system_id' => $championship->system_id,
                 'third_place' => $championship->third_place,
+                'handicap' => $championship->handicap,
                 'type_id' => $championship->type_id,
                 'sets' => $championship->sets,
                 'setsList' => $championship->setsList(),
+                'handicaps' => $championship->getHandicaps(),
                 'isSingles' => $championship->isSingles(),
                 'isDoubles' => $championship->isDoubles(),
                 'mode' => 'edit',
@@ -186,9 +195,12 @@ class ChampionshipController extends Controller
                 'id' => $p->id,
                 'fullname' => $p->fullname() . ' (' . $p->ttr() . ')',
                 'seed' => $p->seed,
-                'isSeeded' => $p->isSeeded()
+                'isSeeded' => $p->isSeeded(),
+                'ttr' => $p->ttr()
             ];
-        });
+        })
+        ->sortByDesc('ttr')
+        ->values();
 
         return Inertia::render('championships/seeding', [
             'championship' => [

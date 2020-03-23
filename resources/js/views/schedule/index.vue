@@ -84,10 +84,11 @@
             append-to-body
             :modal="true">
 
-            <div class="flex mb-6">
+            <div class="flex items-center mb-6">
                 <span class="mr-3 font-bold">{{ match.p1 }}</span>
                 <span class="mr-3">-</span>
                 <span class="font-bold">{{ match.p2 }}</span>
+                <div class="font-bold ml-6 py-1 px-2 bg-orange-200 rounded">{{ match.handicap }}</div>
             </div>
 
             <div v-if="match.isStarted">
@@ -131,18 +132,29 @@
                 </div>
             </div>
 
-            <div v-else class="flex items-center mb-4">
-                <span class="w-1/5 mr-2">Tisch: </span>
+            <div v-else class="mb-4">
+                <div class="flex items-center">
+                    <span class="w-1/5 mr-2">Tisch: </span>
 
-                <div class="flex-1">
-                    <el-select v-model="match.table_id" placeholder="Tisch wählen">
-                        <el-option
-                            v-for="item in freeTables"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                        </el-option>
-                    </el-select>
+                    <div class="flex-1">
+                        <el-select v-model="match.table_id" placeholder="Tisch wählen">
+                            <el-option
+                                v-for="item in freeTables"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+
+                <div class="flex text-sm mt-2" v-if="match.handicap">
+                    <span class="w-1/5 mr-2"></span>
+                    <div class="font-bold py-1 px-2 bg-orange-200 rounded">
+                        {{ match.handicap }}
+                    </div>
+
+                    <!-- <el-tag type="warning">{{ match.handicap }}</el-tag> -->
                 </div>
             </div>
 

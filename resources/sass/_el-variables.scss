@@ -14,6 +14,7 @@
   $--table-header-font-color: $colors-gray-800;
 
   @import "node_modules/element-ui/packages/theme-chalk/src/base";
+  @import "node_modules/element-ui/packages/theme-chalk/src/backtop";
   @import "node_modules/element-ui/packages/theme-chalk/src/alert";
   @import "node_modules/element-ui/packages/theme-chalk/src/button";
   @import "node_modules/element-ui/packages/theme-chalk/src/checkbox";

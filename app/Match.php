@@ -298,4 +298,41 @@ class Match extends Model
         return ! $this->isEmpty();
     }
 
+    public function handicap()
+    {
+        if (! $this->championship->handicap)
+        {
+            return false;
+        }
+
+        if (! $this->isRegular())
+        {
+            return false;
+        }
+
+        $diff = $this->p1->ttr() - $this->p2->ttr();
+
+        if ($diff == 0)
+        {
+            return 'Ohne Vorgabe';
+        }
+
+        $handicap = $this->championship->handicaps->first(function ($item) use ($diff)
+        {
+            return abs($diff) <= $item->difference;
+        });
+
+        if (is_null($handicap))
+        {
+            $handicap = $this->championship->handicaps->last();
+        }
+
+        if ($handicap->handicap == 0)
+        {
+            return 'Ohne Vorgabe';
+        }
+
+        return $diff > 0 ? 'Vorgabe ' . $handicap->handicap . ' für ' . $this->p1->fullname() : 'Vorgabe ' . $handicap->handicap . ' für ' . $this->p2->fullname();
+    }
+
 }

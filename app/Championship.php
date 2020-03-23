@@ -17,7 +17,8 @@ class Championship extends Model
     const SETS_SEVEN = 7;
 
     protected $casts = [
-        'third_place' => 'boolean'
+        'third_place' => 'boolean',
+        'handicap' => 'boolean'
     ];
 
     protected static function boot()
@@ -57,6 +58,42 @@ class Championship extends Model
     public function type()
     {
         return $this->belongsTo(ChampionshipType::class, 'type_id');
+    }
+
+    public function handicaps()
+    {
+        return $this->hasMany(Handicap::class);
+    }
+
+    public function defaultHandicaps()
+    {
+        return [
+            ['difference' => 50, 'handicap' => 0],
+            ['difference' => 100, 'handicap' => 1],
+            ['difference' => 200, 'handicap' => 2],
+            ['difference' => 300, 'handicap' => 3],
+            ['difference' => 450, 'handicap' => 4],
+            ['difference' => 750, 'handicap' => 5],
+            ['difference' => 1100, 'handicap' => 6],
+            ['difference' => 1500, 'handicap' => 7]
+        ];
+    }
+
+    public function getHandicaps()
+    {
+        return $this->handicaps->isEmpty() ? $this->defaultHandicaps() : $this->handicaps;
+    }
+
+    public function saveHandicaps($handicaps)
+    {
+        collect($handicaps)->filter(function ($item)
+        {
+            return is_int($item['difference']) && is_int($item['handicap']);
+        })
+        ->each(function ($item)
+        {
+            $this->handicaps()->create($item);
+        });
     }
 
     public function doublesDraw()

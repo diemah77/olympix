@@ -24,6 +24,7 @@ class CreateChampionshipsTable extends Migration
             $table->integer('doubles_draw_type')->default(1);
             $table->integer('active_phase')->nullable();
             $table->boolean('third_place')->default(false);
+            $table->boolean('handicap')->default(false);
             $table->unsignedInteger('tournament_id');
             $table->timestamps();
         });

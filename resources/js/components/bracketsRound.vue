@@ -1,5 +1,5 @@
 <template>
-<div class="flex flex-col w-1/4 pr-8">
+<div class="flex flex-col pr-8" :class="{'w-1/4': !isDraw, 'w-2/5': isDraw}">
     <div class="mb-auto" v-if="!round.isWinner">
         <h1 class="py-3 mb-6 text-gray-800 text-center text-base font-bold">
             {{ round.name }}

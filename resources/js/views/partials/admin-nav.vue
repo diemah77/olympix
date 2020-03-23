@@ -1,5 +1,5 @@
 <template>
-<div class="nav text-sm">
+<div class="nav text-sm pb-16">
 	<inertia-link
 		class="link pl-8 pr-4 py-4 mb-8 font-bold flex items-center hover:bg-black-10 hover:text-white"
 		:class="{'bg-black-10 text-white orange-inset': route().current('tournaments.index'), 'text-blue-200': !route().current('tournaments.index')}"

@@ -6,7 +6,7 @@
         <span v-if="has('name')" class="ml-3 text-red-600 text-xs">{{ get('name') }}</span>
     </div>
 
-    <div class="flex items-center mb-8">
+    <div class="flex items-center mb-6">
         <label class="label w-1/5 text-right mr-8">Spielsystem <span class="text-red-600">*</span></label>
         <el-radio-group class="pr-2" v-model="form.system_id" :disabled="isSaved" @change="clear('system_id')">
             <el-radio-button
@@ -18,6 +18,19 @@
             </el-radio-button>
         </el-radio-group>
         <span v-if="has('system_id')" class="ml-3 text-red-600 text-xs">{{ get('system_id') }}</span>
+    </div>
+
+    <div class="flex items-center mb-6">
+        <div class="w-1/5 mr-8"></div>
+
+        <el-checkbox :disabled="isSaved" v-model="form.handicap" label="Mit Vorgabe" class="mr-8"></el-checkbox>
+
+        <transition name="fade">
+            <el-button :disabled="isSaved" v-if="form.handicap" class="hover:underline m-0 p-0" type="text" @click="dialogVisible = true">
+                <icon icon="calculator" fixed-width></icon>
+                <span>Vorgabepunkte</span>
+            </el-button>
+        </transition>
     </div>
 
     <div class="flex items-center mb-8" v-if="enableThirdPlace">
@@ -54,12 +67,52 @@
             <el-button type="primary" @click="save">Speichern</el-button>
         </div>
     </div>
+
+    <el-dialog
+        title="Vorgabepunkte"
+        :visible.sync="dialogVisible"
+        width="30%"
+        append-to-body
+        :modal="true">
+
+        <el-table :data="form.handicaps">
+            <el-table-column
+                prop="difference"
+                label="Max. Differenz">
+
+                <el-input slot-scope="scope" v-model="scope.row.difference" placeholder="Differenz"></el-input>
+            </el-table-column>
+
+            <el-table-column
+                prop="handicap"
+                label="Vorgabe">
+
+                <el-input slot-scope="scope" v-model="scope.row.handicap" placeholder="Vorgabe"></el-input>
+            </el-table-column>
+
+            <el-table-column
+                width="60">
+                <el-button slot-scope="scope" type="primary" size="mini" @click="removeHandicap(scope.$index)">
+                    -
+                </el-button>
+            </el-table-column>
+        </el-table>
+
+        <el-button class="mt-4" type="text" @click="addHandicap()">
+            <icon icon="plus" fixed-width></icon>
+            <span>Vorgabe hinzufügen</span>
+        </el-button>
+
+        <div slot="footer">
+            <el-button type="primary" @click="dialogVisible = false">Schließen</el-button>
+        </div>
+    </el-dialog>
 </div>
 </template>
 
 <script>
-import validation from '@/mixins/validation'
 import admin from '@/views/layouts/admin'
+import validation from '@/mixins/validation'
 import championship from '@/views/layouts/championship'
 
 export default {
@@ -90,7 +143,8 @@ export default {
 	data()
 	{
 		return {
-            form: {...this.championship}
+            form: {...this.championship},
+            dialogVisible: false
 		}
     },
 
@@ -109,6 +163,16 @@ export default {
     },
 
     methods: {
+        removeHandicap(index)
+        {
+            this.form.handicaps.splice(index, 1)
+        },
+
+        addHandicap()
+        {
+            this.form.handicaps.push({difference: '', handicap: ''})
+        },
+
         save()
         {
             if (this.mode == 'edit')
