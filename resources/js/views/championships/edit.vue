@@ -25,8 +25,20 @@
 
         <el-checkbox :disabled="isSaved" v-model="form.handicap" label="Mit Vorgabe" class="mr-8"></el-checkbox>
 
+        <transition-group name="fade" >
+            <template v-if="form.handicap">
+                <el-checkbox key="0" :disabled="isSaved" v-model="form.reverted_handicap" label="Vorgabe umkehren">
+                </el-checkbox>
+
+                <el-tooltip placement="bottom" key="1">
+                    <div slot="content">Der Stärkere erhält Vorgabe.</div>
+                    <icon icon="question-circle" class="ml-1 mr-8 text-sm text-gray-600"></icon>
+                </el-tooltip>
+            </template>
+        </transition-group>
+
         <transition name="fade">
-            <el-button :disabled="isSaved" v-if="form.handicap" class="hover:underline m-0 p-0" type="text" @click="dialogVisible = true">
+            <el-button v-if="form.handicap" :disabled="isSaved" class="hover:underline m-0 p-0 border-0" type="text" @click="dialogVisible = true">
                 <icon icon="calculator" fixed-width></icon>
                 <span>Vorgabepunkte</span>
             </el-button>

@@ -39,6 +39,7 @@ class ChampionshipController extends Controller
                 'system_id' => '',
                 'third_place' => false,
                 'handicap' => false,
+                'reverted_handicap' => false,
                 'type_id' => '',
                 'sets' => '',
                 'setsList' => $championship->setsList(),
@@ -59,7 +60,8 @@ class ChampionshipController extends Controller
             'third_place' => '',
             'type_id' => 'required',
             'sets' => 'required',
-            'handicap' => ''
+            'handicap' => '',
+            'reverted_handicap' => '',
         ]);
 
         $championship = $tournament->championships()->create($data);
@@ -81,6 +83,7 @@ class ChampionshipController extends Controller
                 'system_id' => $championship->system_id,
                 'third_place' => $championship->third_place,
                 'handicap' => $championship->handicap,
+                'reverted_handicap' => $championship->reverted_handicap,
                 'type_id' => $championship->type_id,
                 'sets' => $championship->sets,
                 'setsList' => $championship->setsList(),

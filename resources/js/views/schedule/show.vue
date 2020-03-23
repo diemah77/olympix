@@ -140,15 +140,6 @@
                     </el-select>
                 </div>
             </div>
-
-            <div class="flex text-sm mt-2" v-if="match.handicap">
-                <span class="w-1/5 mr-2"></span>
-                <div class="font-bold py-1 px-2 bg-orange-200 rounded">
-                    {{ match.handicap }}
-                </div>
-
-                <!-- <el-tag type="warning">{{ match.handicap }}</el-tag> -->
-            </div>
         </div>
 
         <div slot="footer" class="dialog-footer">

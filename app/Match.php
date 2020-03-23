@@ -332,7 +332,12 @@ class Match extends Model
             return 'Ohne Vorgabe';
         }
 
-        return $diff > 0 ? 'Vorgabe ' . $handicap->handicap . ' für ' . $this->p1->fullname() : 'Vorgabe ' . $handicap->handicap . ' für ' . $this->p2->fullname();
+        if ($this->championship->reverted_handicap)
+        {
+            $diff = -$diff;
+        }
+
+        return $diff > 0 ? 'Vorgabe ' . $handicap->handicap . ' für ' . $this->p2->fullname() : 'Vorgabe ' . $handicap->handicap . ' für ' . $this->p1->fullname();
     }
 
 }
