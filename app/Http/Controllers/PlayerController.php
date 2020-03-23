@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Player;
 use App\Tournament;
 use Inertia\Inertia;
+use App\Imports\PlayersImport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class PlayerController extends Controller
 {
@@ -89,5 +92,27 @@ class PlayerController extends Controller
                 'ttr' => $p->ttr
             ];
         });
+    }
+
+    public function import(Tournament $tournament)
+    {
+        $validator = Validator::make(request()->all(), ['players' => 'file']);
+
+        $validator->after(function ($validator)
+        {
+            if(! in_array(request()->file('players')->getClientOriginalExtension(), ['csv','xls','xlsx']))
+            {
+                $validator->errors()->add('players', 'Bitte eines der folgende Formate nutzen: csv, xls, xlsx');
+            }
+        });
+
+        if ($validator->fails())
+        {
+            return response($validator->errors(), 422);
+        }
+
+        Excel::import(new PlayersImport($tournament), request()->file('players'));
+
+        return response('OK', 200);
     }
 }

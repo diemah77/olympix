@@ -25,6 +25,7 @@ Route::group(['prefix' => 'tournaments', 'middleware' => 'auth'], function()
         Route::get('/players/{player}', 'PlayerController@edit')->name('players.edit');
         Route::put('/players/{player}', 'PlayerController@update')->name('players.update');
         Route::post('/players/random', 'PlayerController@random')->name('players.random');
+        Route::post('/players/import', 'PlayerController@import')->name('players.import');
 
         Route::get('/schedule', 'ScheduleController@index')->name('schedule.index');
         Route::get('/schedule/{championship}', 'ScheduleController@show')->name('schedule.show');

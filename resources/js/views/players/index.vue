@@ -1,10 +1,25 @@
 <template>
 <div>
     <div class="mb-4">
+        <el-alert
+            class="mb-4"
+            effect="dark"
+            v-if="this.has('players')"
+            :title="this.get('players')"
+            type="error">
+        </el-alert>
+
         <el-button type="primary" @click="$inertia.visit(route('players.create', [$page.t.id]))">
             <icon class="mr-1" icon="plus" fixed-width></icon>
             <span>Spieler erfassen</span>
         </el-button>
+
+        <el-button type="info" @click="selectFile()">
+            <icon class="mr-1" icon="cloud-upload-alt" fixed-width></icon>
+            <span>Spieler aus Excel importieren</span>
+        </el-button>
+
+        <input @change="uploadFile()" ref="uploadInput" type="file" v-show="false">
 
         <el-popover
             placement="right"
@@ -84,11 +99,14 @@
 <script>
 import sort from 'fast-sort'
 import admin from '@/views/layouts/admin'
+import validation from '@/mixins/validation'
 
 export default {
     props: {
 	    initialPlayers: Array
     },
+
+    mixins: [validation],
 
     layout: (h, page) => h(admin, {props: {title: 'Spieler'}} ,  [page]),
 
@@ -123,6 +141,31 @@ export default {
 
 	methods: {
         sort: sort,
+
+        uploadFile()
+        {
+            let data = new FormData();
+            let file = this.$refs.uploadInput.files[0]
+
+            data.append('players', file)
+
+            axios.post(route('players.import', [this.$page.t.id]).url(), data).then(response =>
+            {
+                this.$message.success('Spieler importiert!')
+                this.$inertia.reload()
+                this.clear()
+            })
+            .catch(errors => {
+                this.errors = errors.response.data
+            })
+
+            this.$refs.uploadInput.value = ''
+        },
+
+        selectFile()
+        {
+            return this.$refs.uploadInput.click()
+        },
 
         addRandomPlayers()
         {
