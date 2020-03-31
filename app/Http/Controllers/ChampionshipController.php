@@ -80,6 +80,7 @@ class ChampionshipController extends Controller
             'championship' => [
                 'id' => $championship->id,
                 'name' => $championship->name,
+                'statusName' => $championship->statusName(),
                 'system_id' => $championship->system_id,
                 'third_place' => $championship->third_place,
                 'handicap' => $championship->handicap,
@@ -130,6 +131,7 @@ class ChampionshipController extends Controller
             'championship' => [
                 'id' => $championship->id,
                 'name' => $championship->name,
+                'statusName' => $championship->statusName(),
                 'phases' => $championship->phases()
                     ->orderBy('order')
                     ->get()
@@ -152,6 +154,7 @@ class ChampionshipController extends Controller
             'championship' => [
                 'id' => $championship->id,
                 'name' => $championship->name,
+                'statusName' => $championship->statusName(),
                 'doubles_draw_type' => $championship->doubles_draw_type,
                 'doublesDrawList' => $championship->doublesDraw(),
                 'participants' => $championship->participants->transform(function ($p)
@@ -209,6 +212,7 @@ class ChampionshipController extends Controller
             'championship' => [
                 'id' => $championship->id,
                 'name' => $championship->name,
+                'statusName' => $championship->statusName(),
                 'isSingles' => $championship->isSingles(),
                 'phases' => $championship->phases()
                     ->orderBy('order')

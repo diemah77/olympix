@@ -30,6 +30,7 @@ class DrawController extends Controller
 
         $phase->update(['draw_type' => request()->draw_type, 'status' => Phase::STATUS_PREPARED]);
         $phase->phaseable->generateDraw(request());
+        $championship->updateStatus();
 
         event(new DrawCreated($tournament));
 
@@ -40,6 +41,7 @@ class DrawController extends Controller
     {
         $phase->phaseable->reset();
         $phase->update(['status' => null]);
+        $championship->updateStatus();
 
         event(new DrawDestroyed($tournament));
 

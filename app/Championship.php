@@ -166,6 +166,16 @@ class Championship extends Model
         return $this->system->name == 'Gruppen/KO';
     }
 
+    public function isFinished()
+    {
+        return $this->statusName() == 'Beendet';
+    }
+
+    public function isStarted()
+    {
+        return $this->statusName() == 'Gestartet';
+    }
+
     public function setsList()
     {
         return [
@@ -245,7 +255,10 @@ class Championship extends Model
 
     public function hasStartedPhase()
     {
-        if ($this->phases->count() == 0) return false;
+        if ($this->phases->count() == 0)
+        {
+            return false;
+        }
 
         return $this->phases->filter(function($phase)
         {
@@ -285,6 +298,8 @@ class Championship extends Model
 
             return;
         }
+
+        $this->update(['status' => self::$PREPARED]);
     }
 
     // Ermittle die relevanten Teilnehmer für die Auslosung der Phase

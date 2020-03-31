@@ -86,6 +86,7 @@ class PhaseController extends Controller
             'championship' => [
                 'id' => $championship->id,
                 'name' => $championship->name,
+                'statusName' => $championship->statusName(),
                 'phases' => $championship->phases()->orderBy('order')->get()->transform(function($p) use ($phase)
                 {
                     return [
@@ -113,6 +114,7 @@ class PhaseController extends Controller
     public function start(Tournament $tournament, Championship $championship, Phase $phase)
     {
         $phase->update(['status' => Phase::STATUS_STARTED]);
+        $championship->updateStatus();
 
         return response('OK', 201);
     }
