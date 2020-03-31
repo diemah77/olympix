@@ -1,7 +1,7 @@
 <template>
 <div class="flex items-center mr-8">
 	<div class="pr-3">
-		<user-avatar :image="auth.avatar" :width="12"></user-avatar>
+		<user-avatar :image="auth.avatar" size="small"></user-avatar>
 	</div>
 
     <el-dropdown class="ml-auto text-base" trigger="click" @command="visit">

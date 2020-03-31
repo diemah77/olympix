@@ -1,5 +1,5 @@
 <template>
-<div class="flex mt-8">
+<div class="flex">
     <div class="w-3/5 pr-8">
         <el-table
             :data="orderedParticipants"
@@ -52,10 +52,12 @@ export default {
     },
 
     layout: (h, page) => {
-        return h(admin, {
-            props: {title: 'Setzliste'}
-        } , [
-            h(championship, {props: {championship: page.data.props.championship, width: 'narrow'}}, [page]),
+        return h(admin, {} , [
+            h(championship, {
+                props: {
+                    championship: page.data.props.championship
+                }
+            }, [page]),
         ])
     },
 

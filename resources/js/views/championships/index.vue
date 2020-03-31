@@ -1,11 +1,11 @@
 <template>
-<div>
-    <div class="mb-4">
+<page title="Spielklassen" width="default">
+    <template slot="buttons">
         <el-button type="primary" @click="$inertia.visit(route('championships.create', [$page.t.id]))">
             <icon class="mr-1" icon="plus" fixed-width></icon>
             <span>Neue Klasse erstellen</span>
         </el-button>
-    </div>
+    </template>
 
     <box>
         <el-table
@@ -73,7 +73,7 @@
             @current-change="goToPage">
         </el-pagination>
     </box>
-</div>
+</page>
 </template>
 
 <script>
@@ -84,7 +84,7 @@ export default {
 	    championships: Array,
     },
 
-    layout: (h, page) => h(admin, {props: {title: 'Spielklassen'}} ,  [page]),
+    layout: (h, page) => h(admin, [page]),
 
     data()
     {

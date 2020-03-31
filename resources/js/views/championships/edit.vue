@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="flex items-center mb-8 pt-8">
+    <div class="flex items-center mb-8">
         <label class="label w-1/5 text-right mr-8">Spielklasse <span class="text-red-600">*</span></label>
         <el-input clearable @input="clear('name')" class="w-1/3" v-model="form.name"></el-input>
         <span v-if="has('name')" class="ml-3 text-red-600 text-xs">{{ get('name') }}</span>
@@ -133,12 +133,12 @@ export default {
     ],
 
     layout: (h, page) => {
-        return h(admin, {
-            props: {
-                title: page.data.props.mode == 'create' ? 'Spielklasse erstellen' : page.data.props.championship.name
-            }
-        } , [
-            h(championship, {props: {championship: page.data.props.championship, width: 'narrow'}}, [page]),
+        return h(admin, {} , [
+            h(championship, {
+                props: {
+                    championship: page.data.props.championship
+                }
+            }, [page]),
         ])
     },
 

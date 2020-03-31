@@ -1,10 +1,5 @@
 <template>
 <div class="">
-    <!-- <brackets
-        v-if="phase.rounds.length > 0"
-        :rounds="phase.rounds">
-    </brackets> -->
-
     <brackets-slider
         v-if="phase.rounds.length > 0"
         :rounds="phase.rounds">
@@ -39,9 +34,7 @@ export default {
     },
 
     layout: (h, page) => {
-        return h(admin, {
-            props: {title: page.data.props.championship.name}
-        } , [
+        return h(admin, {} , [
             h(schedule, {props: {championship: page.data.props.championship}}, [page]),
         ])
     }

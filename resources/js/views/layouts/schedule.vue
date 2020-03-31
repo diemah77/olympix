@@ -1,5 +1,5 @@
 <template>
-<div>
+<page width="full" :title="championship.name">
     <schedule-nav class="mb-6" :championship="championship"></schedule-nav>
 
     <box>
@@ -7,7 +7,7 @@
 			<slot />
 		</transition>
     </box>
-</div>
+</page>
 </template>
 
 <script>

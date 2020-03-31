@@ -1,5 +1,5 @@
 <template>
-<div class="mt-8">
+<div>
     <div class="pb-6 border-b border-gray-200 mb-6">
         <div class="flex">
             <div class="flex flex-col mr-8">
@@ -69,7 +69,7 @@
         </div>
     </div>
 
-    <div class="flex items-center mb-8">
+    <div class="flex items-center">
         <label class="label mr-4">Losmethode <span class="text-red-600">*</span></label>
         <el-radio-group class="pr-2" v-model="phase.draw_type">
             <el-radio-button v-for="type in phase.drawTypeList" :label="type.id" :key="type.id">{{ type.label }}</el-radio-button>
@@ -107,6 +107,7 @@
 
     <transition name="fade">
         <groups
+            class="mt-8"
             :groups="form.groups"
             v-if="showGroups">
         </groups>
@@ -135,10 +136,12 @@ export default {
     mixins: [validation],
 
     layout: (h, page) => {
-        return h(admin, {
-            props: {title: page.data.props.phase.name}
-        } , [
-            h(championship, {props: {championship: page.data.props.championship, width: 'narrow'}}, [page]),
+        return h(admin, {} , [
+            h(championship, {
+                props: {
+                    championship: page.data.props.championship
+                }
+            }, [page]),
         ])
     },
 

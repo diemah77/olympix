@@ -1,5 +1,5 @@
 <template>
-<div>
+<page width="full" title="Spielübersicht">
     <box>
         <div class="flex items-center justify-between mb-6">
             <div class="">
@@ -161,7 +161,7 @@
             </div>
         </el-dialog>
     </box>
-</div>
+</page width="full" title="Spielübersicht">
 </template>
 
 <script>
@@ -170,7 +170,7 @@ import admin from '@/views/layouts/admin'
 import validation from '@/mixins/validation'
 
 export default {
-    layout: (h, page) => h(admin, {props: {title: 'Übersicht'}} ,  [page]),
+    layout: (h, page) => h(admin, [page]),
 
     mixins: [validation],
 

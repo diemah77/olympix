@@ -1,6 +1,6 @@
 <template>
-<div>
-    <div class="mb-4">
+<page width="default" title="Spielerliste">
+    <template slot="buttons">
         <el-alert
             class="mb-4"
             effect="dark"
@@ -40,12 +40,12 @@
 
             <icon class="cursor-pointer text-orange-400 ml-3" slot="reference" icon="lightbulb" fixed-width></icon>
         </el-popover>
-    </div>
+    </template>
 
     <box>
         <div class="flex justify-between items-center pb-4 mb-4 border-b border-gray-200">
             <el-input
-                class="w-1/5"
+                class="w-2/5"
                 placeholder="Suchen..."
                 clearable
                 v-model="filterKey">
@@ -93,7 +93,7 @@
             </el-table-column>
         </el-table>
     </box>
-</div>
+</page>
 </template>
 
 <script>
@@ -108,7 +108,7 @@ export default {
 
     mixins: [validation],
 
-    layout: (h, page) => h(admin, {props: {title: 'Spieler'}} ,  [page]),
+    layout: (h, page) => h(admin, [page]),
 
 	data()
 	{

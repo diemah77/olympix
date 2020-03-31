@@ -1,12 +1,35 @@
 <template>
 <div :class="['mx-auto', classes]">
+    <header class="flex items-center mb-6">
+        <div class="flex items-center">
+            <h1 class="text-2xl mr-3">{{ title }}</h1>
+
+            <slot name="tag"></slot>
+        </div>
+
+        <div class="ml-auto">
+            <slot name="buttons"></slot>
+        </div>
+    </header>
+
 	<slot />
 </div>
 </template>
 
 <script>
+import Breadcrumbs from '@/components/breadcrumbs'
+
 export default {
+    components: {
+		Breadcrumbs
+    },
+
     props: {
+        title: {
+            type: String,
+            require: true
+        },
+
         width: {
             type: String,
             required: false,
@@ -25,7 +48,7 @@ export default {
                 return 'max-w-4xl'
             }
 
-            return this.width == 'default' ? 'max-w-screen-xl' : 'max-w-none'
+            return this.width == 'default' ? 'max-w-6xl' : 'max-w-none'
         }
     }
 }

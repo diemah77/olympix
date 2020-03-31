@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="flex justify-between items-center mb-4 pt-8">
+    <div class="flex justify-between items-center mb-4">
         <div class="w-1/2">
             <el-alert
                 v-if="registrations.length == 0"
@@ -89,10 +89,12 @@ export default {
     },
 
     layout: (h, page) => {
-        return h(admin, {
-            props: {title: 'Gemeldete Spieler'}
-        } , [
-            h(championship, {props: {championship: page.data.props.championship, width: 'narrow'}}, [page]),
+        return h(admin, {} , [
+            h(championship, {
+                props: {
+                    championship: page.data.props.championship
+                }
+            }, [page]),
         ])
     },
 

@@ -1,5 +1,5 @@
 <template>
-<page width="narrow">
+<page width="narrow" :title="mode == 'create' ? 'Turnier erstellen' : 'Turnier bearbeiten'">
     <box>
         <div class="flex">
             <div class="mt-4 flex-1">
@@ -52,11 +52,7 @@ export default {
         }
     },
 
-    layout: (h, page) => h(admin, {
-        props: {
-            title: page.data.props.mode == 'create' ? 'Turnier erstellen' : page.data.props.tournament.name
-        }
-    } ,  [page]),
+    layout: (h, page) => h(admin, [page]),
 
 	data()
 	{

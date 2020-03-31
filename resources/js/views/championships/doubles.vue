@@ -1,5 +1,5 @@
 <template>
-<div class="mt-8">
+<div>
     <div class="flex items-center mb-6">
         <label class="label mr-4">Losmethode: </label>
         <el-radio-group class="pr-2" v-model="championship.doubles_draw_type">
@@ -68,10 +68,12 @@ export default {
     },
 
     layout: (h, page) => {
-        return h(admin, {
-            props: {title: 'Doppelpaarungen'}
-        } , [
-            h(championship, {props: {championship: page.data.props.championship, width: 'narrow'}}, [page]),
+        return h(admin, {} , [
+            h(championship, {
+                props: {
+                    championship: page.data.props.championship
+                }
+            }, [page]),
         ])
     },
 

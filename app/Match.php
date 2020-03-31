@@ -35,10 +35,11 @@ class Match extends Model
         {
             if ($match->table_id)
             {
-                $match->table->update(['busy' => false]);
+                $match->table()->update(['busy' => false]);
             }
 
             $match->sets->each->delete();
+            $match->unsetBusyPlayers();
         });
 
         static::addGlobalScope('sorted', function (Builder $builder)
@@ -111,7 +112,19 @@ class Match extends Model
 
     public function registrations()
     {
-        return $this->p1->registrations()->concat($this->p2->registrations());
+        $registrations = collect();
+
+        if ($this->p1)
+        {
+            $registrations->concat($this->p1->registrations());
+        }
+
+        if ($this->p2)
+        {
+            $registrations->concat($this->p2->registrations());
+        }
+
+        return $registrations;
     }
 
     public function p1label()
@@ -159,6 +172,14 @@ class Match extends Model
         });
     }
 
+    public function unsetBusyPlayers()
+    {
+        return $this->registrations()->map(function ($r)
+        {
+            return $r->player->update(['busy' => false]);
+        });
+    }
+
     public function stop($request)
     {
         $this->update([
@@ -178,8 +199,10 @@ class Match extends Model
 
         if ($this->table_id)
         {
-            $this->table->update(['busy' => false]);
+            $this->table()->update(['busy' => false]);
         }
+
+        $this->unsetBusyPlayers();
     }
 
     public function determineWinner($resultId)

@@ -32,9 +32,7 @@ export default {
     },
 
     layout: (h, page) => {
-        return h(admin, {
-            props: {title: page.data.props.championship.name}
-        } , [
+        return h(admin, {} , [
             h(schedule, {props: {championship: page.data.props.championship}}, [page]),
         ])
     }

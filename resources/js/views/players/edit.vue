@@ -1,5 +1,5 @@
 <template>
-<div>
+<page width="narrow" :title="mode == 'create' ? 'Spieler erfassen' : 'Spieler bearbeiten'">
     <box>
         <div class="flex">
             <div class="mt-4 flex-1">
@@ -45,7 +45,7 @@
             </div>
         </div>
     </box>
-</div>
+</page>
 </template>
 
 <script>
@@ -65,11 +65,7 @@ export default {
         }
     },
 
-    layout: (h, page) => h(admin, {
-        props: {
-            title: page.data.props.mode == 'create' ? 'Spieler erfassen' : page.data.props.player.fullname
-        }
-    } ,  [page]),
+    layout: (h, page) => h(admin, [page]),
 
 	data()
 	{

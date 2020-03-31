@@ -1,5 +1,5 @@
 <template>
-<page :width="width">
+<page :title="championship.mode == 'create' ? 'Spielklasse erstellen' : championship.name" width="narrow">
     <championship-nav class="mb-6" :championship="championship"></championship-nav>
 
     <box>
@@ -18,27 +18,11 @@ export default {
         championship: {
             type: Object,
             required: true
-        },
-
-        width: {
-            type: String,
-            required: false,
-            default: 'full',
-            validator: function (value) {
-                return ['full', 'narrow', 'default'].indexOf(value) !== -1
-            }
         }
     },
 
     components: {
         ChampionshipNav
-    },
-
-    computed: {
-        classes()
-        {
-
-        }
     }
 }
 </script>

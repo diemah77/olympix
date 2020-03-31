@@ -8,12 +8,7 @@ export default {
 		image: {
 			type: String,
 			required: true
-		},
-
-		width: {
-			type: Number,
-			required: false
-		},
+        },
 
 		size: {
 			type: String,
@@ -31,8 +26,8 @@ export default {
 		classes()
 		{
 			const classes = {
-				small: 'h-8 w-8',
-				medium: 'h-12 w-12',
+				small: 'h-10 w-10',
+				medium: 'h-16 w-16',
 				large: 'h-24 w-24',
 				huge: 'h-48 w-48'
 			}

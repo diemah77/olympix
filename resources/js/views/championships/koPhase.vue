@@ -1,5 +1,5 @@
 <template>
-<div class="mt-8">
+<div>
     <el-alert
         v-if="!phase.canBeDrawn"
         class="mb-6"
@@ -10,7 +10,7 @@
         Die KO-Phase kann erst gelost werden, wenn die Gruppenphase beendet ist!
     </el-alert>
 
-    <div class="flex items-center mb-8">
+    <div class="flex items-center">
         <label class="label mr-4">Losmethode <span class="text-red-600">*</span></label>
         <el-radio-group class="pr-2" v-model="form.draw_type" :disabled="!phase.canBeDrawn">
             <el-radio-button v-for="type in form.drawTypeList" :label="type.id" :key="type.id">{{ type.label }}</el-radio-button>
@@ -48,6 +48,7 @@
 
     <transition name="fade">
         <brackets
+            class="mt-8"
             :rounds="phase.rounds"
             :is-draw="true"
             v-if="showBrackets">
@@ -76,10 +77,12 @@ export default {
     mixins: [validation],
 
     layout: (h, page) => {
-        return h(admin, {
-            props: {title: page.data.props.phase.name}
-        } , [
-            h(championship, {props: {championship: page.data.props.championship, width: 'narrow'}}, [page]),
+        return h(admin, {} , [
+            h(championship, {
+                props: {
+                    championship: page.data.props.championship
+                }
+            }, [page]),
         ])
     },
 
