@@ -31,7 +31,7 @@ class PhaseController extends Controller
                         {
                             return [
                                 'id'=> $s->id,
-                                'name' => $s->isSeeded() ? "{$s->participant->lastname() ($s->participant->seed)}" : $s->participant->lastname(),
+                                'name' => $s->participant->isSeeded() ? $s->participant->lastname() . ' (' . $s->participant->seed .')' : $s->participant->lastname(),
                                 'seed' => $s->participant->seed
                             ];
                         })

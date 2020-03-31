@@ -33,7 +33,7 @@ class Double extends Model
 
     public function registrations()
     {
-        return collect($this->r1)->concat($this->r2);
+        return collect()->push($this->r1)->push($this->r2);
     }
 
     public function ttr()

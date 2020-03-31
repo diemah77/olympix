@@ -5,23 +5,11 @@
             :data="orderedParticipants"
             :empty-text="'Kein ' + participantEntity +  ' gemeldet'">
 
-            <!-- <el-table-column
-                type="index"
-                width="50">
-            </el-table-column> -->
-
             <el-table-column
                 label="Name"
                 sortable
                 property="fullname">
             </el-table-column>
-
-            <!-- <el-table-column
-                label="TTR-Punkte"
-                sortable
-                property="ttr"
-                width="100">
-            </el-table-column> -->
 
             <el-table-column
                 label="Gesetzt"
@@ -153,7 +141,7 @@ export default {
 
         removeSeeding(participant)
         {
-            participant.seed = ''
+            participant.seed = 0
             participant.isSeeded = false
             this.resetSeedingOrder(this.orderedSeedings)
             this.updateAllSeedings()

@@ -26,10 +26,10 @@ class DrawController extends Controller
             ];
         }
 
-       $this->validate(request(), $rules);
+        $this->validate(request(), $rules);
 
-        $phase->phaseable->generateDraw(request());
         $phase->update(['draw_type' => request()->draw_type, 'status' => Phase::STATUS_PREPARED]);
+        $phase->phaseable->generateDraw(request());
 
         event(new DrawCreated($tournament));
 

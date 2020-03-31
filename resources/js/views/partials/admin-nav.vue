@@ -65,36 +65,37 @@
                 </transition-expand>
             </div>
 
-            <!-- <inertia-link
-                key="1"
-                class="link pl-8 pr-4 py-4 font-bold flex items-center hover:bg-black-10 hover:text-white"
-                :class="{'bg-black-10 text-white orange-inset': isChampionshipsRoute, 'text-blue-200': !isChampionshipsRoute}"
-                :href="route('championships.index', [this.$page.t.id])">
+            <div key="2" :class="{ 'bg-black-10 orange-inset': contains('players'), 'bg-black-10': playersOpened}">
+                <span
+                    @click.prevent="playersOpened = !playersOpened"
+                    class="cursor-pointer pl-8 pr-4 py-4 font-bold flex items-center hover:bg-black-10 hover:text-white"
+                    :class="{'text-white': contains('players'), 'text-blue-200': !contains('players') }">
 
-                <icon class="mr-2" icon="clipboard-list" fixed-width></icon>
-                <span>Spielklassen</span>
-            </inertia-link> -->
+                    <icon class="mr-2" icon="users" fixed-width></icon>
+                    <span>Spieler</span>
+                    <icon class="ml-auto" :icon="playersAngle"></icon>
+                </span>
 
-            <inertia-link
-                key="2"
-                class="link pl-8 pr-4 py-4 font-bold flex items-center hover:bg-black-10 hover:text-white"
-                :class="{'bg-black-10 text-white orange-inset': route().current('players.*'), 'text-blue-200': !route().current('players.*')}"
-                :href="route('players.index', [$page.t.id])">
+                <transition-expand>
+                    <div v-show="playersOpened">
+                        <inertia-link
+                            class="link pl-16 pr-4 py-4 flex items-center hover:bg-black-10 hover:text-white"
+                            :class="{'bg-black-10 text-white': route().current('players.create', [$page.t.id]), 'text-blue-200': !route().current('players.create', [$page.t.id])}"
+                            :href="route('players.create', [$page.t.id])">
 
-                <icon class="mr-2" icon="users" fixed-width></icon>
-                <span>Spieler</span>
-            </inertia-link>
+                            <span>Neuer Spieler</span>
+                        </inertia-link>
 
-            <!-- <inertia-link
-                v-if="$page.t.started_championships_count > 0"
-                key="3"
-                class="link pl-8 pr-4 py-4 font-bold flex items-center hover:bg-black-10 hover:text-white"
-                :class="{'bg-black-10 text-white orange-inset': route().current('schedule.*'), 'text-blue-200': !route().current('schedule.*')}"
-                :href="route('schedule.index', [$page.t.id])">
+                        <inertia-link
+                            class="link pl-16 pr-4 py-4 flex items-center hover:bg-black-10 hover:text-white"
+                            :class="{'bg-black-10 text-white': route().current('players.index'), 'text-blue-200': !route().current('players.index')}"
+                            :href="route('players.index', [$page.t.id])">
 
-                <icon class="mr-2" icon="clock" fixed-width></icon>
-                <span>Spielplan</span>
-            </inertia-link> -->
+                            <span>Spielerliste</span>
+                        </inertia-link>
+                    </div>
+                </transition-expand>
+            </div>
 
             <div
                 key="3"
@@ -165,6 +166,7 @@ export default {
     {
         return {
             championshipOpened: false,
+            playersOpened: false,
             scheduleOpened: false
         }
     },
@@ -173,6 +175,11 @@ export default {
         championshipAngle()
 		{
 			return this.championshipOpened ? 'angle-up': 'angle-down'
+        },
+
+        playersAngle()
+		{
+			return this.playersOpened ? 'angle-up': 'angle-down'
         },
 
         scheduleAngle()
@@ -200,6 +207,7 @@ export default {
         setOpened(route)
         {
 			this.championshipOpened = this.contains(['/championships'])
+			this.playersOpened = this.contains(['/players'])
 			this.scheduleOpened = this.contains(['/schedule'])
         }
     },

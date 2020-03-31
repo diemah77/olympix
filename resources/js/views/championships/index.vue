@@ -55,8 +55,12 @@
                 label="Aktionen">
 
                 <template slot-scope="scope">
-                    <el-button type="info" plain @click="$inertia.visit(route('championships.edit', [$page.t.id, scope.row.id]))">
+                    <el-button type="info" plain @click="$inertia.visit(route('championships.edit', [$page.t.id, scope.row.id]).url())">
                         <icon icon="eye" fixed-width></icon>
+                    </el-button>
+
+                    <el-button type="danger" plain @click="deleteChampionship(scope.row.id)">
+                        <icon icon="trash" fixed-width></icon>
                     </el-button>
                 </template>
             </el-table-column>
@@ -106,7 +110,22 @@ export default {
         goToPage(page)
 		{
 			this.currentPage = page
-		}
+        },
+
+        deleteChampionship(id)
+        {
+            this.$confirm('Soll die Spielklasse gelöscht werden?', 'Achtung', {
+                confirmButtonText: 'Löschen',
+                cancelButtonText: 'Abbrechen',
+                type: 'warning'
+            })
+            .then(() => {
+                axios.delete(route('championships.destroy', [this.$page.t.id, id]).url()).then(() => this.$inertia.reload())
+            })
+            .catch(() => {
+
+            })
+        }
     }
 }
 </script>

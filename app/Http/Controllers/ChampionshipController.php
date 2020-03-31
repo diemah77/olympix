@@ -229,9 +229,36 @@ class ChampionshipController extends Controller
     {
         $data = $this->validate(request(), [
             'name' => 'required',
+            'system_id' => 'required',
+            'third_place' => '',
+            'type_id' => 'required',
+            'sets' => 'required',
+            'handicap' => '',
+            'reverted_handicap' => '',
         ]);
 
+        // Wenn wichtige Felder geändert worden sind, dann Phasen zurücksetzen
+        if (
+            $data['system_id'] != $championship->system_id ||
+            $data['third_place'] != $championship->third_place ||
+            $data['type_id'] != $championship->type_id ||
+            $data['sets'] != $championship->sets
+        )
+        {
+            $championship->update($data);
+
+            $championship->reset();
+            $championship->createPhases();
+        }
+
         $championship->update($data);
+
+        return response('OK', 200);
+    }
+
+    public function destroy(Tournament $tournament, Championship $championship)
+    {
+        $championship->delete();
 
         return response('OK', 200);
     }

@@ -28,7 +28,7 @@ class Single extends Model
 
     public function registrations()
     {
-        return collect($this->registration);
+        return collect()->push($this->registration);
     }
 
 	public function ttr()

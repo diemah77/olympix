@@ -18,7 +18,8 @@ class Championship extends Model
 
     protected $casts = [
         'third_place' => 'boolean',
-        'handicap' => 'boolean'
+        'handicap' => 'boolean',
+        'reverted_handicap' => 'boolean',
     ];
 
     protected static function boot()
@@ -27,27 +28,62 @@ class Championship extends Model
 
         static::created(function ($championship)
         {
-            $championship->tournament->increment('championships_count');
+            $championship->createPhases();
+        });
 
-            $p2 = KoPhase::create();
-            $p2->phase()->create([
-                'championship_id'=> $championship->id,
-                'order' => 2,
-                'draw_type' => Phase::DRAW_TYPE_TTR
+        static::deleting(function($championship)
+        {
+            $championship->purge();
+        });
+    }
+
+    public function createPhases()
+    {
+        $this->tournament->increment('championships_count');
+
+        $ko = KoPhase::create();
+        $p2 = $ko->phase()->create([
+            'championship_id'=> $this->id,
+            'order' => 2,
+            'draw_type' => Phase::DRAW_TYPE_TTR
+        ]);
+
+        if ($this->isGroupElimination())
+        {
+            $group = GroupPhase::create();
+            $p1 = $group->phase()->create([
+                'championship_id'=> $this->id,
+                'draw_type' => Phase::DRAW_TYPE_TTR,
+                'order' => 1
             ]);
 
-            if ($championship->isGroupElimination())
-            {
-                $group = GroupPhase::create();
-                $p1 = $group->phase()->create([
-                    'championship_id'=> $championship->id,
-                    'draw_type' => Phase::DRAW_TYPE_TTR,
-                    'order' => 1
-                ]);
+            $p1->nextPhase()->associate($p2)->save();
+        }
+    }
 
-                $p1->nextPhase()->associate($p2)->save();
+    public function purge()
+    {
+        $this->phases->each->delete();
+        $this->registrations->each->delete();
+        $this->participants()->withoutGlobalScopes()->get()->each->delete();
+        $this->handicaps->each->delete();
+        $this->tournament->decrement('championships_count');
+    }
+
+    public function reset()
+    {
+        $this->tournament->decrement('championships_count');
+        $this->handicaps->each->delete();
+        $this->phases->each->delete();
+        $this->participants()->withoutGlobalScopes()->get()->each->delete();
+
+        if ($this->isSingles())
+        {
+            foreach ($this->registrations as $registration)
+            {
+                $this->addSingle($registration);
             }
-        });
+        }
     }
 
     public function system()
@@ -220,7 +256,10 @@ class Championship extends Model
 
     public function hasNonPreparedPhase()
     {
-        if ($this->phases->count() == 0) return false;
+        if ($this->phases->count() == 0)
+        {
+            return false;
+        }
 
         return $this->phases->filter(function($phase)
         {

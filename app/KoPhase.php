@@ -33,7 +33,7 @@ class KoPhase extends Phase
         $this->phase->participants()->detach();
     }
 
-    public function generateDraw($request)
+    public function generateDraw()
     {
         $this->reset();
 

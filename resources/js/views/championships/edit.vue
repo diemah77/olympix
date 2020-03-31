@@ -8,7 +8,7 @@
 
     <div class="flex items-center mb-6">
         <label class="label w-1/5 text-right mr-8">Spielsystem <span class="text-red-600">*</span></label>
-        <el-radio-group class="pr-2" v-model="form.system_id" :disabled="isSaved" @change="clear('system_id')">
+        <el-radio-group class="pr-2" v-model="form.system_id" @change="clear('system_id')">
             <el-radio-button
                 v-for="system in systems"
                 :label="system.id"
@@ -23,11 +23,11 @@
     <div class="flex items-center mb-6">
         <div class="w-1/5 mr-8"></div>
 
-        <el-checkbox :disabled="isSaved" v-model="form.handicap" label="Mit Vorgabe" class="mr-8"></el-checkbox>
+        <el-checkbox v-model="form.handicap" label="Mit Vorgabe" class="mr-8"></el-checkbox>
 
         <transition-group name="fade" >
             <template v-if="form.handicap">
-                <el-checkbox key="0" :disabled="isSaved" v-model="form.reverted_handicap" label="Vorgabe umkehren">
+                <el-checkbox key="0" v-model="form.reverted_handicap" label="Vorgabe umkehren">
                 </el-checkbox>
 
                 <el-tooltip placement="bottom" key="1">
@@ -38,7 +38,7 @@
         </transition-group>
 
         <transition name="fade">
-            <el-button v-if="form.handicap" :disabled="isSaved" class="hover:underline m-0 p-0 border-0" type="text" @click="dialogVisible = true">
+            <el-button v-if="form.handicap" class="hover:underline m-0 p-0 border-0" type="text" @click="dialogVisible = true">
                 <icon icon="calculator" fixed-width></icon>
                 <span>Vorgabepunkte</span>
             </el-button>
@@ -48,12 +48,12 @@
     <div class="flex items-center mb-8" v-if="enableThirdPlace">
         <div class="w-1/5 mr-8"></div>
 
-        <el-checkbox :disabled="isSaved" v-model="form.third_place" label="Spiel um Platz 3"></el-checkbox>
+        <el-checkbox v-model="form.third_place" label="Spiel um Platz 3"></el-checkbox>
     </div>
 
     <div class="flex items-center mb-8">
         <label class="label w-1/5 text-right mr-8">Typ <span class="text-red-600">*</span></label>
-        <el-radio-group class="pr-2" v-model="form.type_id" :disabled="isSaved" @change="clear('type_id')">
+        <el-radio-group class="pr-2" v-model="form.type_id" @change="clear('type_id')">
             <el-radio-button
                 v-for="item in types"
                 :label="item.id"
@@ -67,7 +67,7 @@
 
     <div class="flex items-center mb-8">
         <label class="label w-1/5 text-right mr-8">Gewinnsätze <span class="text-red-600">*</span></label>
-        <el-radio-group class="pr-2" v-model="form.sets" :disabled="isSaved" @change="clear('sets')">
+        <el-radio-group class="pr-2" v-model="form.sets" @change="clear('sets')">
             <el-radio-button v-for="set in form.setsList" :label="set.id" :key="set.id">{{ set.label }}</el-radio-button>
         </el-radio-group>
         <span v-if="has('sets')" class="ml-3 text-red-600 text-xs">{{ get('sets') }}</span>
@@ -160,6 +160,16 @@ export default {
 		}
     },
 
+    watch: {
+        enableThirdPlace(newValue)
+        {
+            if (! newValue)
+            {
+                this.form.third_place = false
+            }
+        }
+    },
+
     computed: {
         isSaved()
         {
@@ -187,13 +197,37 @@ export default {
 
         save()
         {
-            if (this.mode == 'edit')
+            if (this.isSaved)
             {
-                axios.put(route('championships.update', [this.$page.t.id, this.form.id]).url(), this.form).then(() =>
+                if (this.championship.system_id != this.form.system_id ||
+                    this.championship.third_place != this.form.third_place ||
+                    this.championship.type_id != this.form.type_id ||
+                    this.championship.sets != this.form.sets)
                 {
-                    this.$inertia.reload()
-                })
-                .catch(error => this.errors = error.response.data.errors)
+                    this.$confirm('Diese Änderung setzt alle Phasen zurück. Fortfahren?', 'Achtung', {
+                        confirmButtonText: 'OK',
+                        cancelButtonText: 'Abbrechen',
+                        type: 'warning'
+                    })
+                    .then(() => {
+                        axios.put(route('championships.update', [this.$page.t.id, this.form.id]).url(), this.form).then(() =>
+                        {
+                            this.$inertia.reload()
+                            this.$message.success('Änderungen gespeichert.')
+                        })
+                        .catch(error => this.errors = error.response.data.errors)
+                    })
+                    .catch(() => {})
+                }
+                else
+                {
+                    axios.put(route('championships.update', [this.$page.t.id, this.form.id]).url(), this.form).then(() =>
+                        {
+                            this.$inertia.reload()
+                            this.$message.success('Änderungen gespeichert.')
+                        })
+                        .catch(error => this.errors = error.response.data.errors)
+                }
             }
             else
             {

@@ -109,31 +109,66 @@ export default {
     methods: {
         generateDraw()
 		{
-            this.drawLoading = true
+            if (this.form.isDrawn)
+            {
+                this.$confirm('Soll die Phase neu gelost werden?', 'Achtung', {
+                    confirmButtonText: 'OK',
+                    cancelButtonText: 'Abbrechen',
+                    type: 'warning'
+                })
+                .then(() => {
+                    this.drawLoading = true
 
-            axios.post(route('draws.store', [this.$page.t.id, this.championship.id, this.form.id]).url(), this.form).then(response =>
+                    axios.post(route('draws.store', [this.$page.t.id, this.championship.id, this.form.id]).url(), this.form).then(response =>
+                    {
+                        this.$inertia.reload()
+                        this.drawLoading = false
+                        this.$message.success('Phase erfolgreich ausgelost!')
+                    })
+                    .catch(error =>
+                    {
+                        this.drawLoading = false
+                        this.errors = error.response.data.errors
+                    })
+                })
+                .catch(() => {})
+            }
+            else
             {
-                this.$inertia.reload()
-                this.drawLoading = false
-                this.$message.success('Phase erfolgreich ausgelost!')
-            })
-            .catch(error =>
-            {
-                this.drawLoading = false
-                this.errors = error.response.data.errors
-            })
+                this.drawLoading = true
+
+                axios.post(route('draws.store', [this.$page.t.id, this.championship.id, this.form.id]).url(), this.form).then(response =>
+                {
+                    this.$inertia.reload()
+                    this.drawLoading = false
+                    this.$message.success('Phase erfolgreich ausgelost!')
+                })
+                .catch(error =>
+                {
+                    this.drawLoading = false
+                    this.errors = error.response.data.errors
+                })
+            }
 		},
 
 		resetDraw()
 		{
-            this.resetLoading = true
-
-            axios.delete(route('draws.destroy', [this.$page.t.id, this.championship.id, this.form.id]).url()).then(response =>
-            {
-                this.resetLoading = false
-                this.$inertia.reload()
-                this.$message.success('Phase zurückgesetzt!')
+            this.$confirm('Soll die Auslosung zurückgesetzt werden?', 'Achtung', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Abbrechen',
+                type: 'warning'
             })
+            .then(() => {
+                this.resetLoading = true
+
+                axios.delete(route('draws.destroy', [this.$page.t.id, this.championship.id, this.form.id]).url()).then(response =>
+                {
+                    this.resetLoading = false
+                    this.$inertia.reload()
+                    this.$message.success('Phase zurückgesetzt!')
+                })
+            })
+            .catch(() => {})
         },
 
         start()

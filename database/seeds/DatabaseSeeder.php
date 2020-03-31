@@ -114,9 +114,9 @@ class TournamentSeeder extends Seeder {
         $c = factory(App\Championship::class)->create([
             'tournament_id' => $t->id,
             'name' => 'Einzel',
-            'system_id' => 3,
+            'system_id' => 1,
             'third_place' => false,
-            'type_id' => 2,
+            'type_id' => 1,
             'sets' => 5
         ]);
 

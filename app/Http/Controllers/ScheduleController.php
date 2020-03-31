@@ -20,7 +20,7 @@ class ScheduleController extends Controller
 
         $matches = $tournament->cachedMatches()->filter(function ($m) use ($hasFreeTables)
         {
-            return $m->isStarted() || ($hasFreeTables && $m->isRegular() && !$m->isFinished());
+            return $m->isStarted() || ($hasFreeTables && $m->isRegular() && !$m->isFinished() && !$m->hasInvolvedPlayers());
         })
         ->transform(function ($m)
         {
@@ -77,7 +77,7 @@ class ScheduleController extends Controller
                 'isStarted' => $m->isStarted(),
                 'isFinished' => $m->isFinished(),
                 'handicap' => $m->handicap(),
-                'relevant' => $m->isStarted() || ($hasFreeTables && $m->isRegular() && !$m->isFinished()),
+                'relevant' => $m->isStarted() || ($hasFreeTables && $m->isRegular() && !$m->isFinished() && !$m->hasInvolvedPlayers()),
                 'p1' => $m->p1 ? $m->p1->fullname() : '',
                 'p2' => $m->p2 ? $m->p2->fullname() : '',
                 'phase' => $m->matchable->phase->phase->name(),

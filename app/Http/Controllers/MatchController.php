@@ -21,10 +21,7 @@ class MatchController extends Controller
         	$table->update(['busy' => true]);
         }
 
-    	$match->update([
-    		'table_id' => request()->table_id,
-    		'status' => Match::$STARTED
-        ]);
+        $match->start(request());
 
         event(new MatchStarted($tournament));
 

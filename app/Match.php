@@ -29,13 +29,16 @@ class Match extends Model
         static::updating(function ($match)
         {
             $match->winner = $match->determineWinner($match->result_id);
-
-            // Cache::forget('c' . optional($match->championship)->id . 'relevant_matches');
         });
 
         static::deleting(function ($match)
         {
-            // Cache::flush();
+            if ($match->table_id)
+            {
+                $match->table->update(['busy' => false]);
+            }
+
+            $match->sets->each->delete();
         });
 
         static::addGlobalScope('sorted', function (Builder $builder)
@@ -108,7 +111,7 @@ class Match extends Model
 
     public function registrations()
     {
-        return collect([$this->p1->registrations(), $this->p2->registrations()]);
+        return $this->p1->registrations()->concat($this->p2->registrations());
     }
 
     public function p1label()
@@ -138,11 +141,29 @@ class Match extends Model
         return "{$str} {$match}";
     }
 
+    public function start($request)
+    {
+        $this->update([
+            'table_id' => $request->table_id,
+            'status' => self::$STARTED
+        ]);
+
+        $this->setBusyPlayers();
+    }
+
+    public function setBusyPlayers()
+    {
+        return $this->registrations()->map(function ($r)
+        {
+            return $r->player->update(['busy' => true]);
+        });
+    }
+
     public function stop($request)
     {
         $this->update([
             'result_id' => $request->result_id,
-            'status' => self::$FINISHED,
+            'status' => self::$FINISHED
         ]);
 
         if ($request->sets)
@@ -157,7 +178,7 @@ class Match extends Model
 
         if ($this->table_id)
         {
-            Table::whereId($this->table_id)->update(['busy' => false]);
+            $this->table->update(['busy' => false]);
         }
     }
 
@@ -271,6 +292,14 @@ class Match extends Model
     public function isRegular()
     {
         return !($this->hasByes() || $this->hasAvailables() || $this->isEmpty());
+    }
+
+    public function hasInvolvedPlayers()
+    {
+        return $this->registrations()->contains(function ($r)
+        {
+            return $r->player->busy;
+        });
     }
 
     public function scopeStarted($query)

@@ -36,6 +36,7 @@ import {
     faRandom,
     faTable,
     faTimes,
+    faTrash,
     faTrophy,
     faUndo,
     faUsers
@@ -68,6 +69,7 @@ library.add(
     faRandom,
     faTable,
     faTimes,
+    faTrash,
     faTrophy,
     faUndo,
     faUsers

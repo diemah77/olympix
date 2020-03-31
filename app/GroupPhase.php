@@ -18,7 +18,10 @@ class GroupPhase extends Phase
         $this->phase->championship->participants()->available()->delete();
         $this->phase->participants()->detach();
 
-       optional($this->phase->nextPhase)->phaseable->reset();
+        if ($nextPhaseable = optional($this->phase->nextPhase)->phaseable)
+        {
+            $nextPhaseable->reset();
+        }
     }
 
     public function groups()

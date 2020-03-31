@@ -88,7 +88,7 @@
                 <span class="mr-3 font-bold">{{ match.p1 }}</span>
                 <span class="mr-3">-</span>
                 <span class="font-bold">{{ match.p2 }}</span>
-                <div class="font-bold ml-6 py-1 px-2 bg-orange-200 rounded">{{ match.handicap }}</div>
+                <div v-if="match.handicap" class="font-bold ml-6 py-1 px-2 bg-orange-200 rounded">{{ match.handicap }}</div>
             </div>
 
             <div v-if="match.isStarted">

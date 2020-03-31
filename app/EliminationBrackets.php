@@ -3,6 +3,7 @@
 namespace App;
 
 use App;
+use Illuminate\Support\Collection;
 
 abstract class EliminationBrackets
 {
@@ -38,26 +39,7 @@ abstract class EliminationBrackets
 
 	public function fillFirstRound()
 	{
-		$byes = $this->getByeParticipants($this->bracketSize - $this->participants->count());
-
-        list($seeded, $rest) = $this->participants->concat($byes)->partition(function($p)
-        {
-            return $p->seed > 0;
-        });
-
-        $all = $seeded->sortBy('seed');
-
-        if ($this->phase->isDrawRandom())
-        {
-            $rest = $rest->shuffle();
-        }
-
-        $all = $all->concat($rest)->values()->map(function ($p, $index)
-        {
-            $p->seed = $this->seedPlayer($index + 1, $this->bracketSize) + 1;
-
-            return $p;
-        })->sortBy('seed');
+        $all = $this->seededParticipants();
 
 		// Teilnehmer der Phase zuweisen
 		$this->phase->participants()->attach($all);
@@ -83,6 +65,33 @@ abstract class EliminationBrackets
 		}
 
 		$this->firstRound->matches()->saveMany($matches->all());
+    }
+
+    protected function seededParticipants() : Collection
+    {
+        list($seeded, $unseeded) = $this->participants->partition(function ($p)
+        {
+            return $p->seed > 0;
+        });
+
+        $all = $seeded->sortBy('seed')->concat($unseeded);
+
+        if ($this->phase->isDrawRandom())
+        {
+            $all = $all->shuffle();
+        }
+
+        $byes = $this->getByeParticipants($this->bracketSize - $all->count());
+
+        $all = $all->concat($byes)->values()->map(function ($p, $index)
+        {
+            $p->seed = $this->seedPlayer($index + 1, $this->bracketSize) + 1;
+
+            return $p;
+        })
+        ->sortBy('seed');
+
+        return $all;
     }
 
     public function seedPlayer($rank, $bracketSize)

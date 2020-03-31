@@ -25,7 +25,11 @@ class Phase extends Model
 
         static::deleting(function($phase)
         {
-            $phase->phaseable->each->delete();
+            if (! is_null($phaseable = $phase->phaseable))
+            {
+                $phaseable->reset();
+                $phaseable->delete();
+            }
         });
     }
 
@@ -74,7 +78,7 @@ class Phase extends Model
 
     public function canBeDrawn()
     {
-        if (!$this->previousPhase) return true;
+        if (! $this->previousPhase) return true;
 
         return $this->previousPhase->isFinished();
     }
