@@ -33,6 +33,36 @@ class UsersSeeder extends Seeder
             'email' => 'dfrei84@gmail.com',
             'password' => bcrypt('viktoria'),
         ]);
+
+        App\User::create([
+    		'name' => 'Malle',
+            'email' => 'schriftfuehrer@ttc-olympia.de',
+            'password' => bcrypt('olaympia'),
+        ]);
+
+        App\User::create([
+    		'name' => 'Jens',
+            'email' => 'jens.koch06@gmail.com',
+            'password' => bcrypt('müllem'),
+        ]);
+
+        App\User::create([
+    		'name' => 'Luke',
+            'email' => 'kommunikation@ttc-olympia.de',
+            'password' => bcrypt('olympia'),
+        ]);
+
+        App\User::create([
+    		'name' => 'Uli',
+            'email' => 'uli_manner@yahoo.de',
+            'password' => bcrypt('lay_uli'),
+        ]);
+
+        App\User::create([
+    		'name' => 'Thomas',
+            'email' => 'thomas.berek@web.de',
+            'password' => bcrypt('lay_thomas'),
+        ]);
     }
 }
 
