@@ -18,6 +18,8 @@ class CreateTournamentsTable extends Migration
             $table->string('name');
             $table->integer('status')->default(1);
             $table->integer('tables_count');
+            $table->integer('tables_rows')->default(1);
+            $table->integer('tables_transponed')->default(0);
             $table->integer('championships_count')->default(0);
             $table->unsignedBigInteger('user_id');
             $table->timestamps();

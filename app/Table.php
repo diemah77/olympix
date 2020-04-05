@@ -14,4 +14,9 @@ class Table extends Model
     {
         return $this->hasMany(Match::class);
     }
+
+    public function displayName()
+    {
+        return 'Tisch ' . $this->name;
+    }
 }

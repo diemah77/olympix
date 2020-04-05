@@ -14,6 +14,11 @@ Breadcrumbs::for('tournaments.edit', function ($trail, $tournament) {
     $trail->push('Turnier bearbeiten', route('tournaments.edit',  $tournament));
 });
 
+Breadcrumbs::for('tables.index', function ($trail, $tournament) {
+    $trail->parent('tournaments.index');
+    $trail->push('Tischanordnung', route('tables.index', $tournament));
+});
+
 Breadcrumbs::for('championships.index', function ($trail, $tournament) {
     $trail->push($tournament->name, route('championships.index',  $tournament));
 });
@@ -74,6 +79,10 @@ Breadcrumbs::for('phases.edit', function ($trail, $tournament, $championship, $p
 
 Breadcrumbs::for('schedule.index', function ($trail, $tournament) {
     $trail->push('Spielplan', route('schedule.index', $tournament));
+});
+
+Breadcrumbs::for('schedule.tables', function ($trail, $tournament) {
+    $trail->push('Spielplan', route('schedule.tables', $tournament));
 });
 
 Breadcrumbs::for('schedule.show', function ($trail, $tournament, $championship) {

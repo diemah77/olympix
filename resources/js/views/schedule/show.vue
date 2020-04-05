@@ -160,7 +160,7 @@
 import sort from 'fast-sort'
 import admin from '@/views/layouts/admin'
 import validation from '@/mixins/validation'
-import schedule from '@/views/layouts/schedule'
+import schedule from '@/views/layouts/scheduled-championships'
 
 export default {
     mixins: [validation],

@@ -17,6 +17,7 @@ class CreateTablesTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->boolean('busy')->default(0);
+            $table->boolean('horizontal')->default(0);
             $table->unsignedInteger('tournament_id');
             $table->timestamps();
         });

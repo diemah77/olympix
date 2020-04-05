@@ -5,7 +5,7 @@
             <inertia-link
                 key="0"
                 class="link pl-8 pr-4 py-4 font-bold flex items-center hover:bg-black-10 hover:text-white"
-                :class="{'bg-black-10 text-white orange-inset': route().current('tournaments.edit'), 'text-blue-200': !route().current('tournaments.edit')}"
+                :class="{'bg-black-10 text-white orange-inset': route().current('tournaments.edit') || route().current('tables.index'), 'text-blue-200': !route().current('tournaments.edit') && !route().current('tables.index')}"
                 :href="route('tournaments.edit', [this.$page.t.id])">
 
                 <icon class="mr-2" icon="cogs" fixed-width></icon>
@@ -107,9 +107,9 @@
                         <inertia-link
                             class="link pl-16 pr-4 py-4 flex items-center hover:bg-black-10 hover:text-white"
                             :class="{'bg-black-10 text-white': route().current('schedule.index'), 'text-blue-200': !route().current('schedule.index')}"
-                            :href="route('schedule.index', [$page.t.id])">
+                            :href="route('schedule.index', [$page.t.id]).url()">
 
-                            <span>Übersicht</span>
+                            <span>Turnierübersicht</span>
                         </inertia-link>
 
                         <div v-if="$page.t.championships.length > 0">
@@ -126,16 +126,6 @@
                     </div>
                 </transition-expand>
             </div>
-
-			<!--<router-link
-				key="4"
-				:to="{name: 'viewer.index'}"
-				tag="li">
-
-				<a class="nav-link link text-white px-8 py-4 font-bold flex items-center hover:bg-black-10">
-					<span>Viewer</span>
-				</a>
-			</router-link> -->
 		</template>
 	</transition-group>
 </div>

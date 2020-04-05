@@ -6,19 +6,19 @@ use App\Tournament;
 use Inertia\Inertia;
 use App\Http\Controllers\Controller;
 
-class TournamentController extends Controller
+class TableController extends Controller
 {
-    public function index()
+    public function index(Tournament $tournament)
     {
-        return Inertia::render('tournaments/index', [
-            'tournaments' => auth()->user()->tournaments->transform(function($t)
+        return Inertia::render('tournaments/tables', [
+            'tournament' => $tournament,
+            'initialTables' => $tournament->tables->transform(function($t)
             {
                 return [
                     'id' => $t->id,
                     'name' => $t->name,
-                    'tables_count' => $t->tables_count,
-                    'championships_count' => $t->championships_count,
-                    'statusName' => $t->statusName(),
+                    'busy' => $t->busy,
+                    'horizontal' => $t->horizontal
                 ];
             })
         ]);
@@ -72,12 +72,12 @@ class TournamentController extends Controller
         return response('OK', 200);
     }
 
-    public function tables(Tournament $tournament)
+    public function rotate(Tournament $tournament)
     {
-        $tournament->update([
-            'tables_transponed' => request()->tables_transponed,
-            'tables_rows' => request()->tables_rows
-        ]);
+        foreach ($tournament->tables as $table)
+        {
+            $table->update(['horizontal' => !$table->horizontal]);
+        }
 
         return response('OK', 200);
     }

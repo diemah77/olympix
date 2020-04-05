@@ -18,7 +18,7 @@
 
 <script>
 import admin from '@/views/layouts/admin'
-import schedule from '@/views/layouts/schedule'
+import schedule from '@/views/layouts/scheduled-championships'
 import Brackets from '@/components/brackets'
 import BracketsSlider from '@/components/bracketsSlider'
 

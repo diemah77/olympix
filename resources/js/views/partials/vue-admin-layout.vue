@@ -25,7 +25,7 @@ export default {
     mounted()
     {
         Scrollbar.init(this.$refs.sidebar)
-        Scrollbar.init(this.$refs.main)
+        Scrollbar.init(this.$refs.main, { alwaysShowTracks: true })
     }
 }
 </script>

@@ -12,6 +12,7 @@ class Tournament extends Model
 
     protected $casts = [
         'table_count' => 'integer',
+        'table_rows' => 'integer',
         'status' => 'integer'
     ];
 
@@ -19,12 +20,17 @@ class Tournament extends Model
     {
         parent::boot();
 
+        static::creating(function ($tournament)
+        {
+            $tournament->tables_rows = intval(sqrt($tournament->tables_count));
+        });
+
         static::created(function ($tournament)
         {
         	for ($i = 1; $i <= $tournament->tables_count; $i++)
 	        {
             	$tournament->tables()->create([
-                    'name' => 'Tisch ' . $i
+                    'name' => $i
                 ]);
 	        }
 

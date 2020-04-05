@@ -1,12 +1,10 @@
 <template>
-<page width="full" :title="championship.name">
-    <schedule-nav class="mb-6" :championship="championship"></schedule-nav>
+<page width="full" title="Turnierübersicht">
+    <schedule-nav class="mb-6"></schedule-nav>
 
-    <box>
-        <transition name="fade" mode="out-in">
-			<slot />
-		</transition>
-    </box>
+    <transition name="fade" mode="out-in">
+        <slot />
+    </transition>
 </page>
 </template>
 
@@ -14,8 +12,6 @@
 import ScheduleNav from '@/views/partials/schedule-nav'
 
 export default {
-    props : ['championship'],
-
     components: {
         ScheduleNav
     }

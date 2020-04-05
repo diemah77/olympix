@@ -45,10 +45,10 @@ export default {
         {
             if (this.width == 'narrow')
             {
-                return 'max-w-4xl'
+                return 'max-w-3xl'
             }
 
-            return this.width == 'default' ? 'max-w-6xl' : 'max-w-none'
+            return this.width == 'default' ? 'max-w-5xl' : 'max-w-none'
         }
     }
 }

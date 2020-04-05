@@ -21,6 +21,10 @@ Route::group(['prefix' => 'tournaments', 'middleware' => 'auth'], function()
 
     Route::group(['prefix' => '/{tournament}'], function()
     {
+        Route::post('/tables', 'TournamentController@tables')->name('tables');
+        Route::get('/tables', 'TableController@index')->name('tables.index');
+        Route::post('/tables/rotate', 'TableController@rotate')->name('tables.rotate');
+
         Route::get('/players', 'PlayerController@index')->name('players.index');
         Route::get('/players/create', 'PlayerController@create')->name('players.create');
         Route::post('/players', 'PlayerController@store')->name('players.store');
@@ -30,6 +34,7 @@ Route::group(['prefix' => 'tournaments', 'middleware' => 'auth'], function()
         Route::post('/players/import', 'PlayerController@import')->name('players.import');
 
         Route::get('/schedule', 'ScheduleController@index')->name('schedule.index');
+        Route::get('/schedule/tables', 'ScheduleController@tables')->name('schedule.tables');
         Route::get('/schedule/{championship}', 'ScheduleController@show')->name('schedule.show');
         Route::get('/schedule/{championship}/phases/{phase}', 'ScheduleController@phase')->name('schedule.phase');
     });

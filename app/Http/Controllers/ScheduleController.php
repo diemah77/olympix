@@ -47,7 +47,14 @@ class ScheduleController extends Controller
 
         return Inertia::render('schedule/index', [
             'matches' => $matches,
-            'tables' => $tournament->tables,
+            'tables' => $tournament->tables->transform(function ($t)
+            {
+                return [
+                    'id' => $t->id,
+                    'name' => $t->displayName(),
+                    'busy' => $t->busy
+                ];
+            }),
             'results' => Result::all()->transform(function($r)
             {
                 return [
@@ -57,6 +64,37 @@ class ScheduleController extends Controller
                     'size' => $r->size
                 ];
             }),
+        ]);
+    }
+
+    public function tables(Tournament $tournament)
+    {
+        $runningMatches = $tournament->cachedMatches()->filter(function ($m)
+        {
+            return $m->isStarted();
+        })
+        ->values();
+
+        return Inertia::render('schedule/tables', [
+            'tournament' => $tournament,
+            'tables' => $tournament->tables->transform(function ($t) use ($runningMatches)
+            {
+                $match = $runningMatches->first(function ($m) use ($t)
+                {
+                    return $m->table_id == $t->id;
+                });
+
+                return [
+                    'id' => $t->id,
+                    'name' => $t->name,
+                    'busy' => $t->busy,
+                    'horizontal' => $t->horizontal,
+                    'match' => $match ? [
+                        'p1' => $match->p1->fullname(),
+                        'p2' => $match->p2->fullname()
+                    ] : null
+                ];
+            })
         ]);
     }
 
@@ -94,7 +132,7 @@ class ScheduleController extends Controller
             {
                 return [
                     'id' => $t->id,
-                    'name' => $t->name,
+                    'name' => $t->displayName(),
                     'busy' => $t->busy,
                 ];
             }),

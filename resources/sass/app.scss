@@ -81,4 +81,122 @@ html {
     }
 }
 
+.side-div {
+    width: 0.3em;
+}
+
+.side-div-h {
+    height: 0.3em;
+}
+
+.upper-table-area {
+    border-top-width: 0.2em;
+    border-left-width: 0.2em;
+    border-right-width: 0.2em;
+    border-color: theme('colors.white');
+}
+
+.lower-table-area {
+    border-bottom-width: 0.2em;
+    border-left-width: 0.2em;
+    border-right-width: 0.2em;
+    border-color: theme('colors.white');
+}
+
+.left-upper-half {
+    border-right-width: 1px;
+    border-right-color: theme('colors.white');
+}
+
+.left-upper-half-h {
+    border-top-width: 0.2em;
+    border-left-width: 0.2em;
+    border-bottom-width: 1px;
+    border-color: theme('colors.white');
+}
+
+.right-upper-half {
+    border-left-width: 1px;
+    border-right-color: theme('colors.white');
+}
+
+.right-upper-half-h {
+    border-top-width: 0.2em;
+    border-right-width: 0.2em;
+    border-bottom-width: 1px;
+    border-color: theme('colors.white');
+}
+
+.left-lower-half-h {
+    border-top-width: 1px;
+    border-left-width: 0.2em;
+    border-bottom-width: 0.2em;
+    border-color: theme('colors.white');
+}
+
+.right-lower-half-h {
+    border-top-width: 1px;
+    border-right-width: 0.2em;
+    border-bottom-width: 0.2em;
+    border-color: theme('colors.white');
+}
+
+.net {
+    height: 0.2em;
+    background-color: theme('colors.gray.700');
+    border: 1px solid theme('colors.white');
+}
+
+.net-h {
+    width: 0.2em;
+    background-color: theme('colors.gray.700');
+    border: 1px solid theme('colors.white');
+}
+
+.pulse-orange {
+	background: rgba(237, 137, 54, 1);
+	box-shadow: 0 0 0 0 rgba(237, 137, 54, 1);
+	animation: pulse-orange 2s infinite;
+}
+
+@keyframes pulse-orange {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(237, 137, 54, 0.7);
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(237, 137, 54, 0);
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(237, 137, 54, 0);
+	}
+}
+
+.pulse-green {
+	background: rgba(72, 187, 120, 1);
+	box-shadow: 0 0 0 0 rgba(72, 187, 120, 1);
+	animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(72, 187, 120, 0.7);
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(72, 187, 120, 0);
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(72, 187, 120, 0);
+	}
+}
+
 @tailwind utilities;
