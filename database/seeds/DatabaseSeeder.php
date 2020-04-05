@@ -37,7 +37,7 @@ class UsersSeeder extends Seeder
         App\User::create([
     		'name' => 'Malle',
             'email' => 'schriftfuehrer@ttc-olympia.de',
-            'password' => bcrypt('olaympia'),
+            'password' => bcrypt('olympia'),
         ]);
 
         App\User::create([
