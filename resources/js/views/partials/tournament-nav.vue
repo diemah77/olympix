@@ -27,7 +27,7 @@ export default {
     methods: {
         editRoute()
         {
-            return this.tournament.mode == 'create' ? route('tournaments.create', this.$page.t.id) : route('tournaments.edit', [this.$page.t.id, this.tournament.id])
+            return this.tournament.mode == 'create' ? route('tournaments.create') : route('tournaments.edit', [this.tournament.id])
         }
     }
 }

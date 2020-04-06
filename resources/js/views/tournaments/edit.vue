@@ -4,7 +4,7 @@
         <div class="mt-4 flex-1">
             <div class="flex items-center mb-8">
                 <label class="label w-1/5 text-right mr-8">Turniername <span class="text-red-600">*</span></label>
-                <el-input @input="clear('name')" class="w-1/3" v-model="form.name" clearable></el-input>
+                <el-input @input="clear('name')" class="w-2/5" v-model="form.name" clearable></el-input>
                 <span v-if="has('name')" class="ml-3 text-red-600 text-xs">{{ get('name') }}</span>
             </div>
 
@@ -18,6 +18,18 @@
                 <span v-if="has('tables_count')" class="ml-3 text-red-600 text-xs">{{ get('tables_count') }}</span>
             </div>
 
+            <template v-if="tournament.id">
+                <div class="flex items-center mb-8">
+                    <label class="label w-1/5 text-right mr-8">URL</label>
+                    <a class="link text-blue-600 hover:text-blue-400 hover:underline" :href="tournament.results_route" target="_blank">{{ tournament.results_route }}</a>
+                </div>
+
+                <div class="flex mb-8">
+                    <label class="label w-1/5 text-right mr-8">QR-Code</label>
+                    <img :src="'/qrcodes/' + tournament.qr_code_src">
+                </div>
+            </template>
+
             <div class="flex">
                 <div class="w-4/5 pl-8 ml-auto">
                     <el-button @click="$inertia.visit(route('tournaments.index'))">Abbrechen</el-button>
@@ -25,6 +37,19 @@
                 </div>
             </div>
         </div>
+
+        <!-- <div v-if="tournament.published" class="w-2/5 pl-6 border-l border-gray-300">
+            <h1 class="text-lg font-bold mb-6">Live-Ergebnisse</h1>
+
+            <div class="mb-8">
+                <label class="label block">URL</label>
+                <a class="link text-blue-600 hover:text-blue-400 hover:underline" :href="tournament.results_route" target="_blank">{{ tournament.results_route }}</a>
+            </div>
+
+            <div class="mb-8">
+                <img :src="'/qrcodes/' + tournament.qr_code_src">
+            </div>
+        </div> -->
     </div>
 </box>
 </template>

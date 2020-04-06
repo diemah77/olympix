@@ -1,6 +1,6 @@
 <template>
 <div>
-    <box class="flex items-center">
+    <box class="flex items-center mb-6">
         <div class="flex items-center">
             <label class="mr-4 text-sm font-bold">Anzahl Reihen</label>
             <el-input-number

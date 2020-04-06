@@ -2,6 +2,8 @@
 
 namespace App;
 
+use QrCode;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -13,7 +15,8 @@ class Tournament extends Model
     protected $casts = [
         'table_count' => 'integer',
         'table_rows' => 'integer',
-        'status' => 'integer'
+        'status' => 'integer',
+        'published' => 'boolean'
     ];
 
     protected static function boot()
@@ -32,20 +35,20 @@ class Tournament extends Model
             	$tournament->tables()->create([
                     'name' => $i
                 ]);
-	        }
+            }
 
-            // factory(Viewer::class)->create(['tournament_id' => $tournament->id]);
+            $tournament->route_hash = $tournament->resultsRouteHash();
+            $hash = $tournament->qrCodeFilename() . '.png';
+            $tournament->qr_code_src = $hash;
+            $tournament->save();
+
+            QrCode::format('png')->size(200)->generate($tournament->resultsRoute(), public_path("qrcodes/{$hash}"));
         });
     }
 
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function viewer()
-    {
-        return $this->hasOne(Viewer::class);
     }
 
     public function championships()
@@ -154,5 +157,36 @@ class Tournament extends Model
         $this->cacheMatches();
 
         return Cache::get($this->cacheKey());
+    }
+
+    public function resultsRoute()
+    {
+        return route('results', ['hash' => $this->route_hash]);
+    }
+
+    public function publish()
+    {
+        $this->update(['published' => true]);
+    }
+
+    /**
+     * QR-Hash
+     */
+    public function qrCodeFilename()
+    {
+        return base64_encode(bcrypt($this->name . $this->id . now()->timestamp));
+    }
+
+    /**
+     * Ergebnis-Hash
+     */
+    public function resultsRouteHash()
+    {
+        return (string) Str::of(base64_encode(bcrypt($this->id)))->substr(0, 10);
+    }
+
+    public function unpublish()
+    {
+        $this->update(['published' => false]);
     }
 }

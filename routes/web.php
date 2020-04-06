@@ -6,6 +6,8 @@ Route::get('login')->name('login')->uses('Auth\LoginController@showLoginForm')->
 Route::post('login')->name('login.attempt')->uses('Auth\LoginController@login')->middleware('guest');
 Route::get('logout')->name('logout')->uses('Auth\LoginController@logout');
 
+Route::get('/results/{hash}', 'ResultController')->name('results');
+
 Route::get('/', function()
 {
     return redirect()->route('tournaments.index');
@@ -18,6 +20,7 @@ Route::group(['prefix' => 'tournaments', 'middleware' => 'auth'], function()
     Route::post('/', 'TournamentController@store')->name('tournaments.store');
     Route::get('/{tournament}', 'TournamentController@edit')->name('tournaments.edit');
     Route::put('/{tournament}', 'TournamentController@update')->name('tournaments.update');
+    Route::post('/{tournament}/publish', 'TournamentController@publish')->name('tournaments.publish');
 
     Route::group(['prefix' => '/{tournament}'], function()
     {
