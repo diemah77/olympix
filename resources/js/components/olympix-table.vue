@@ -1,5 +1,5 @@
 <template>
-<div class="my-8 mx-8">
+<div class="mb-8 mx-8">
     <div class="flex flex-col items-center">
         <template v-if="!table.horizontal">
 

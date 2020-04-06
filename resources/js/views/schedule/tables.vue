@@ -43,19 +43,19 @@ export default {
         {
             const tables = this.chunk(this.tables, Math.ceil(this.tables.length / this.tournament.tables_rows))
 
-            // if (this.tournament.transponed)
-            // {
-            //     return tables.reduce((r, a, i, { length }) =>
-            //     {
-            //         a.forEach((v, j) =>
-            //         {
-            //             r[j] = r[j] || []
-            //             r[j][i] = v
-            //         })
+            if (this.tournament.tables_transponed)
+            {
+                return tables.reduce((r, a, i, { length }) =>
+                {
+                    a.forEach((v, j) =>
+                    {
+                        r[j] = r[j] || []
+                        r[j][i] = v
+                    })
 
-            //         return r
-            //     }, [])
-            // }
+                    return r
+                }, [])
+            }
 
             return tables
         }

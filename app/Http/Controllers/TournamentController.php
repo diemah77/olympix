@@ -55,6 +55,9 @@ class TournamentController extends Controller
                 'id' => $tournament->id,
                 'name' => $tournament->name,
                 'tables_count' => $tournament->tables_count,
+                'qr_code_src' => $tournament->qr_code_src,
+                'published' => $tournament->published,
+                'results_route' => $tournament->resultsRoute(),
                 'mode' => 'edit'
             ],
             'mode' => 'edit'
@@ -78,6 +81,13 @@ class TournamentController extends Controller
             'tables_transponed' => request()->tables_transponed,
             'tables_rows' => request()->tables_rows
         ]);
+
+        return response('OK', 200);
+    }
+
+    public function publish(Tournament $tournament)
+    {
+        $tournament->publish();
 
         return response('OK', 200);
     }
