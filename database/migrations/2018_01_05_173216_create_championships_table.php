@@ -16,6 +16,7 @@ class CreateChampionshipsTable extends Migration
         Schema::create('championships', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->string('slug')->nullable();
             $table->unsignedInteger('type_id');
             $table->unsignedInteger('system_id');
             $table->integer('sets');

@@ -1,5 +1,9 @@
 <?php
 
+Breadcrumbs::for('results', function ($trail) {
+    $trail->push('Turniere', route('results'));
+});
+
 Breadcrumbs::for('tournaments.index', function ($trail) {
     $trail->push('Turniere', route('tournaments.index'));
 });

@@ -1,5 +1,5 @@
 <template>
-<div :class="['mx-auto', classes]">
+<div :class="[classes, {'mx-auto': centered}]">
     <header class="flex items-center mb-6">
         <div class="flex items-center">
             <h1 class="text-2xl mr-3">{{ title }}</h1>
@@ -35,8 +35,13 @@ export default {
             required: false,
             default: 'full',
             validator: function (value) {
-                return ['full', 'narrow', 'default'].indexOf(value) !== -1
+                return ['full', 'narrow', 'default', 'max-xl'].indexOf(value) !== -1
             }
+        },
+
+        centered: {
+            type: Boolean,
+            default: true
         }
     },
 
@@ -48,7 +53,12 @@ export default {
                 return 'max-w-3xl'
             }
 
-            return this.width == 'default' ? 'max-w-5xl' : 'max-w-none'
+            if (this.width == 'default')
+            {
+                return 'max-w-5xl'
+            }
+
+            return this.width == 'full' ? 'max-w-none' : 'max-w-screen-xl'
         }
     }
 }

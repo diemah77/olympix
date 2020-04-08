@@ -37,7 +37,7 @@ class Tournament extends Model
                 ]);
             }
 
-            $tournament->route_hash = $tournament->resultsRouteHash();
+            $tournament->hash = $tournament->resultsRouteHash();
             $hash = $tournament->qrCodeFilename() . '.png';
             $tournament->qr_code_src = $hash;
             $tournament->save();
@@ -161,7 +161,7 @@ class Tournament extends Model
 
     public function resultsRoute()
     {
-        return route('results', ['hash' => $this->route_hash]);
+        return route('results', ['tournament' => $this]);
     }
 
     public function publish()

@@ -29,9 +29,9 @@ class AppServiceProvider extends ServiceProvider
                     'name' => $user->name,
                 ];
             },
-            'breadcrumbs' => function() {
-                return Breadcrumbs::generate();
-            },
+            // 'breadcrumbs' => function() {
+            //     return Breadcrumbs::generate();
+            // },
             't' => function() {
                 $t = request()->route('tournament');
                 $t = $t instanceof Tournament ? $t : Tournament::find($t);

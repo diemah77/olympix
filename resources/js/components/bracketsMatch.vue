@@ -1,7 +1,7 @@
 <template>
 <div class="flex mb-6">
-    <div class="w-8 mr-2 flex flex-col justify-around text-right text-gray-300 font-bold">
-        <template v-if="playerNumberVisible">
+    <div v-if="playerNumberVisible" class="w-8 mr-2 flex flex-col justify-around text-right text-gray-300 font-bold">
+        <template>
             <div>{{ 2 * index + 1 }}</div>
             <div>{{ 2 * index + 2 }}</div>
         </template>

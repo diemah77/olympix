@@ -13,7 +13,7 @@
         @routes
     </head>
 
-    <body class="font-source bg-gray-200 text-gray-800 leading-tight">
+    <body class="font-source text-gray-800 leading-tight">
        @inertia
 
         <script src="{{ mix('js/manifest.js') }}"></script>

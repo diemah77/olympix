@@ -2,7 +2,7 @@
 <div>
 	<div v-for="(group, index) in groups" :class="{'mb-16': index < groups.length - 1}" :key="group.id">
         <div class="row">
-            <div class="col-12 md:col-8 mb-8 lg:mb-0">
+            <div class="col-8">
                 <h1 class="text-xl pb-2">{{ group.name }}</h1>
 
                 <group-matrix
@@ -10,7 +10,7 @@
                 </group-matrix>
             </div>
 
-            <div class="col-12 md:col-4">
+            <div class="col-4">
                 <h1 class="text-xl pb-2">Tabelle</h1>
 
                 <group-standing

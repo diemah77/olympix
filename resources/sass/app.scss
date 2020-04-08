@@ -1,6 +1,6 @@
 @tailwind base;
 
-@import url(//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700);
+@import url(//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,500,700);
 
 * {
 	outline: none !important;
@@ -54,7 +54,7 @@ html {
 }
 
 .link {
-    @apply .transition-all .duration-500 .ease-in .no-underline;
+    @apply .transition-all .duration-200 .ease-in .no-underline;
 
 	&:focus {
 		outline: none;
@@ -73,12 +73,14 @@ html {
     @apply .flex .flex-wrap .-mx-4;
 }
 
-@for $i from 1 through 12 {
-    .col-#{$i} {
-        width: $i / 12 * 100%;
-        padding-left: 1rem;
-    	padding-right: 1rem;
-    }
+@responsive {
+	@for $i from 1 through 12 {
+		.col-#{$i} {
+            width: $i / 12 * 100%;
+            padding-left: 1rem;
+    	    padding-right: 1rem;
+		}
+	}
 }
 
 .side-div {

@@ -3,6 +3,7 @@
 namespace App;
 
 use App\HasStatus;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 
 class Championship extends Model
@@ -25,6 +26,11 @@ class Championship extends Model
     protected static function boot()
     {
         parent::boot();
+
+        static::creating(function ($championship)
+        {
+            $championship->slug = Str::slug($championship->name);
+        });
 
         static::created(function ($championship)
         {
@@ -389,5 +395,10 @@ class Championship extends Model
     public function createThirdPlaceGame($round)
     {
         return $this->third_place && $round->isSemi();
+    }
+
+    public function resultsRoute()
+    {
+        return route('results.championship', ['tournament' => $this->tournament, 'championship' => $this]);
     }
 }

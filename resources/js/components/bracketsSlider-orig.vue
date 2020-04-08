@@ -1,13 +1,13 @@
 <template>
-<div class="md:px-">
+<div class="px-6">
     <div class="bg-white z-10 mb-6 sticky top-0 relative">
-        <div class="block absolute left-0 z-20">
+        <div class="absolute left-0 z-20" style="margin-left: -25px;">
             <el-button class="py-3 shadow-md" circle type="primary" @click="slidePrev()" :disabled="prevButtonDisabled">
                 <icon icon="chevron-left" fixed-width />
             </el-button>
         </div>
 
-        <div class="block absolute right-0 z-20">
+        <div class="absolute right-0 z-20"  style="margin-right: -25px;">
             <el-button class="py-3 shadow-md" circle type="primary" @click="slideNext()" :disabled="nextButtonDisabled">
                 <icon icon="chevron-right" fixed-width />
             </el-button>
@@ -19,7 +19,7 @@
                 :key="n">
 
                 <div class="flex pt-2 pb-4">
-                    <div class="flex-1 pr-8 text-center font-bold" v-for="round in winnerRounds.slice(n-1, offset+n)" :key="round.id">
+                    <div class="w-1/4 pr-8 text-center font-bold" v-for="round in winnerRounds.slice(n-1, 3+n)" :key="round.id">
                         {{ round.name }}
                     </div>
                 </div>
@@ -34,7 +34,7 @@
 
             <div class="flex">
                 <brackets-round
-                    v-for="(round, roundIndex) in winnerRounds.slice(n-1, offset+n)"
+                    v-for="(round, roundIndex) in winnerRounds.slice(n-1, 3+n)"
                     :key="round.id"
                     :is-draw="false"
                     :round="round"
@@ -44,7 +44,7 @@
 
             <div class="flex mt-12" v-if="loserRounds.length">
                 <brackets-round
-                    v-for="round in loserRounds.slice(n-1, offset+n)"
+                    v-for="round in loserRounds.slice(n-1, 3+n)"
                     :key="round.id"
                     :is-draw="false"
                     :round="round"
@@ -65,26 +65,10 @@ export default {
     },
 
     props: {
-        rounds: Array,
-        width: Number
+        rounds: Array
     },
 
     computed: {
-        offset()
-        {
-            if (this.width < 500)
-            {
-                return 0
-            }
-
-            if (this.width < 900)
-            {
-                return 1
-            }
-
-            return 2
-        },
-
         winnerRounds()
         {
             return this.rounds.filter(r => r.isWinner)
@@ -110,7 +94,7 @@ export default {
             const winnersCount = this.rounds.filter(r => r.isWinner).length
             const losersCount = this.rounds.filter(r => !r.isWinner).length
 
-            return Math.max(1, Math.max(winnersCount, losersCount) - this.offset)
+            return Math.max(1, Math.max(winnersCount, losersCount) - 3)
         }
     },
 
@@ -149,7 +133,6 @@ export default {
             },
 
 			options: {
-                allowTouchMove: true,
                 slidesPerView: 1,
                 autoHeight: true,
                 speed: 200

@@ -23,7 +23,7 @@ class CreateTournamentsTable extends Migration
             $table->integer('championships_count')->default(0);
             $table->boolean('published')->default(0);
             $table->string('qr_code_src')->nullable();
-            $table->string('route_hash')->nullable();
+            $table->string('hash')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
         });
