@@ -1,5 +1,5 @@
 <template>
-<h1 class="m-auto text-xl mt-8">Die Turnierergebnisse sind noch nicht veröffentlicht.</h1>
+<h1 class="m-auto text-xl mt-8">{{ $page.msg }}</h1>
 </template>
 
 <script>

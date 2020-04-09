@@ -13,7 +13,19 @@ class ResultController extends Controller
 {
     public function __invoke(Tournament $tournament)
     {
+        $msg = null;
+
         if (! $tournament->published)
+        {
+            $msg = 'Die Turnierergebnisse sind noch nicht veröffentlicht.';
+        }
+
+        if ($tournament->championships_count == 0)
+        {
+            $msg = 'Es wurden noch keine Spielklassen ausgelost.';
+        }
+
+        if ($msg)
         {
             return Inertia::render('results/empty', [
                 'tournament' => [
@@ -21,7 +33,8 @@ class ResultController extends Controller
                     'name' => $tournament->name,
                     'hash' => $tournament->hash,
                     'results_route' => $tournament->resultsRoute(),
-                ]
+                ],
+                'msg' => $msg
             ]);
         }
 
@@ -134,6 +147,7 @@ class ResultController extends Controller
                 'id' => $tournament->id,
                 'name' => $tournament->name,
                 'hash' => $tournament->hash,
+                'published' => $tournament->published,
                 'results_route' => $tournament->resultsRoute(),
             ],
             'championship' => [
