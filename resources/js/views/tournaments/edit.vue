@@ -24,9 +24,17 @@
                     <a class="link text-blue-600 hover:text-blue-400 hover:underline" :href="tournament.results_route" target="_blank">{{ tournament.results_route }}</a>
                 </div>
 
-                <div class="flex mb-8">
+                <div class="flex mb-16">
                     <label class="label w-1/5 text-right mr-8">QR-Code</label>
-                    <img :src="'/qrcodes/' + tournament.qr_code_src">
+
+                    <div class="flex flex-col">
+                        <img :src="'/qrcodes/' + tournament.qr_code_src">
+
+                        <el-button type="primary" round @click="download()">
+                            <icon icon="cloud-download-alt" fixed-width class="mr-2" />
+                            <span>QR-Code downloaden</span>
+                        </el-button>
+                    </div>
                 </div>
             </template>
 
@@ -97,6 +105,11 @@ export default {
 	},
 
     methods: {
+        download()
+        {
+            window.location.href = route('tournaments.qr_code', [this.form.id]).url()
+        },
+
         save()
         {
             const request = this.mode == 'edit' ? axios.put(route('tournaments.update', this.form.id).url(), this.form) : axios.post(route('tournaments.store').url(), this.form)

@@ -13,30 +13,33 @@ class ResultController extends Controller
 {
     public function __invoke(Tournament $tournament)
     {
-        abort_if(! $tournament->published, 404);
+        if (! $tournament->published)
+        {
+            return Inertia::render('results/empty', [
+                'tournament' => [
+                    'id' => $tournament->id,
+                    'name' => $tournament->name,
+                    'hash' => $tournament->hash,
+                    'results_route' => $tournament->resultsRoute(),
+                ]
+            ]);
+        }
 
-        return redirect()->route('results.show', ['tournament' => $tournament, 'championship' => $tournament->championships->first()]);
+        $championship = $tournament->championships->first();
+        $phase = $championship->phases()->orderBy('order')->first();
 
-        return Inertia::render('results/index', [
-            'tournament' => [
-                'id' => $tournament->id,
-                'name' => $tournament->name,
-                'results_route' => $tournament->resultsRoute(),
-            ],
-            'championship' => $tournament->championships->first(),
-            'championships' => $tournament->championships->transform(function ($c)
-            {
-                return [
-                    'id' => $c->id,
-                    'name' => $c->name,
-                ];
-            })
-        ]);
+        return redirect()->route('results.show', [
+            'tournament' => $tournament,
+            'championship' => $championship,
+            'phase' => $phase]);
     }
 
     public function show(Tournament $tournament, Championship $championship, Phase $phase)
     {
-        abort_if(! $tournament->published, 404);
+        if (! $tournament->published)
+        {
+            return Inertia::render('results/empty');
+        }
 
         if ($phase->isGroup())
         {
@@ -97,7 +100,7 @@ class ResultController extends Controller
                         'isWinner' => $r->isWinner(),
                         'matches' => $matches->filter(function ($m) use ($r)
                         {
-                            return $m->matchable->id == $r->id;
+                            return $m->matchable->id == $r->id && $m->matchable_type == 'App\Round';
                         })
                         ->transform(function ($m)
                         {

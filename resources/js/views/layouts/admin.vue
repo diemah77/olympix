@@ -1,5 +1,5 @@
 <template>
-<admin-layout>
+<admin-layout class="bg-gray-200">
 	<template slot="title">
 		<h1 class="flex h-full items-center pl-2 text-xl text-blue-500 font-thin uppercase bg-black-10">
             <img class="w-8 mr-2" src="/img/olympix.png">
@@ -26,7 +26,7 @@
 		<user class="ml-auto" :auth="$page.auth"></user>
 	</div>
 
-	<div slot="main" id="content" class="pt-10 px-4 pb-16">
+	<div slot="main" id="content" class="pt-10 px-6 pb-16">
 		<transition name="fade" mode="out-in">
 			<slot />
 		</transition>

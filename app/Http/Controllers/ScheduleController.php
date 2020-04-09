@@ -224,7 +224,7 @@ class ScheduleController extends Controller
                         'isWinner' => $r->isWinner(),
                         'matches' => $matches->filter(function ($m) use ($r)
                         {
-                            return $m->matchable->id == $r->id;
+                            return $m->matchable->id == $r->id && $m->matchable_type == 'App\Round';
                         })
                         ->transform(function ($m)
                         {

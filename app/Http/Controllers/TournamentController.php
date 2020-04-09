@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Tournament;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 
 class TournamentController extends Controller
@@ -90,5 +91,13 @@ class TournamentController extends Controller
         $tournament->publish();
 
         return response('OK', 200);
+    }
+
+    public function downloadQRCode(Tournament $tournament)
+    {
+        return response()->download(
+            public_path('/qrcodes/' . $tournament->qr_code_src),
+            $tournament->name . ' _Ergebnis_QR-Code.png'
+        );
     }
 }

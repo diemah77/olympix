@@ -50,12 +50,12 @@ export default {
         {
             if (this.width == 'narrow')
             {
-                return 'max-w-3xl'
+                return 'max-w-4xl'
             }
 
             if (this.width == 'default')
             {
-                return 'max-w-5xl'
+                return 'max-w-6xl'
             }
 
             return this.width == 'full' ? 'max-w-none' : 'max-w-screen-xl'

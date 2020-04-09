@@ -29,7 +29,7 @@
     </header>
 
     <aside ref="aside" class="aside h-full hidden xl:block">
-        <div class="mt-6 ml-6">
+        <div v-if="$page.tournament.published" class="mt-6 ml-6">
             <h2 class="uppercase text-sm font-bold text-gray-500 mb-3">Spielklassen</h2>
 
             <div v-for="championship in $page.championships" class="py-2 truncate" :key="championship.id">
