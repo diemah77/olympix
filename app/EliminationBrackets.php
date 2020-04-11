@@ -74,12 +74,14 @@ abstract class EliminationBrackets
             return $p->seed > 0;
         });
 
-        $all = $seeded->sortBy('seed')->concat($unseeded);
+        $all = $seeded->sortBy('seed');
 
         if ($this->phase->isDrawRandom())
         {
-            $all = $all->shuffle();
+            $unseeded = $unseeded->shuffle();
         }
+
+        $all = $all->concat($unseeded);
 
         $byes = $this->getByeParticipants($this->bracketSize - $all->count());
 
