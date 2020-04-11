@@ -4,7 +4,7 @@
         <template v-if="!table.horizontal">
 
             <!-- Tisch -->
-            <div class="flex flex-col flex-1" :style="{width: table.horizontal ? tableHeight + 'px' : tableWidth + 'px', height: table.horizontal ? tableWidth + 'px': tableHeight + 'px'}">
+            <div class="flex flex-col" :style="{width: table.horizontal ? tableHeight + 'px' : tableWidth + 'px', height: table.horizontal ? tableWidth + 'px': tableHeight + 'px'}">
 
                 <!-- Obere Hälfte -->
                 <div class="flex-1 flex upper-half">
