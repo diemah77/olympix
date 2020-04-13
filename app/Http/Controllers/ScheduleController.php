@@ -226,6 +226,7 @@ class ScheduleController extends Controller
                         {
                             return $m->matchable->id == $r->id && $m->matchable_type == 'App\Round';
                         })
+                        ->sortBy('id')
                         ->transform(function ($m)
                         {
                             return [
@@ -234,7 +235,7 @@ class ScheduleController extends Controller
                                 'result' => [
                                     'left' => $m->leftResult(),
                                     'right' => $m->rightResult(),
-                                    'sets' => $m->displaySets()
+                                    'sets' => $m->sets
                                 ],
                                 'p1' => [
                                     'id' => $m->p1 ? $m->p1->id : '',

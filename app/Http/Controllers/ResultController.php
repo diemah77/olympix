@@ -13,32 +13,17 @@ class ResultController extends Controller
 {
     public function __invoke(Tournament $tournament)
     {
-        $msg = null;
-
-        if (! $tournament->published)
-        {
-            $msg = 'Die Turnierergebnisse sind noch nicht veröffentlicht.';
-        }
-
-        if ($tournament->championships_count == 0)
-        {
-            $msg = 'Es wurden noch keine Spielklassen ausgelost.';
-        }
-
-        if ($msg)
-        {
-            return Inertia::render('results/empty', [
-                'tournament' => [
-                    'id' => $tournament->id,
-                    'name' => $tournament->name,
-                    'hash' => $tournament->hash,
-                    'results_route' => $tournament->resultsRoute(),
-                ],
-                'msg' => $msg
-            ]);
-        }
-
         $championship = $tournament->championships->first();
+        $phase = $championship->phases()->orderBy('order')->first();
+
+        return redirect()->route('results.show', [
+            'tournament' => $tournament,
+            'championship' => $championship,
+            'phase' => $phase]);
+    }
+
+    public function championship(Tournament $tournament, Championship $championship)
+    {
         $phase = $championship->phases()->orderBy('order')->first();
 
         return redirect()->route('results.show', [
@@ -49,11 +34,6 @@ class ResultController extends Controller
 
     public function show(Tournament $tournament, Championship $championship, Phase $phase)
     {
-        if (! $tournament->published)
-        {
-            return Inertia::render('results/empty');
-        }
-
         if ($phase->isGroup())
         {
             $view = 'results/groupPhase';

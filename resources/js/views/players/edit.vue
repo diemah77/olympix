@@ -26,7 +26,8 @@
                 <div class="flex mb-8">
                     <div class="w-4/5 pl-8 ml-auto">
                         <el-button @click="$inertia.visit(route('players.index', [$page.t.id]))">Abbrechen</el-button>
-                        <el-button type="primary" @click="save">Speichern</el-button>
+                        <el-button type="primary" @click="save()">Speichern</el-button>
+                        <el-button type="primary" v-if="this.mode == 'create'" @click="save(true)">Speichern und Neu</el-button>
                     </div>
                 </div>
 
@@ -108,7 +109,7 @@ export default {
             return this.player.championships.some(c => c.id == championship.id)
         },
 
-        save()
+        save(redirectToNew = false)
         {
             if (this.mode == 'edit')
             {
@@ -122,7 +123,14 @@ export default {
             {
                 axios.post(route('players.store', [this.$page.t.id]).url(), this.form).then(response =>
                 {
-                    this.$inertia.visit(route('players.edit', [this.$page.t.id, response.data.id]).url())
+                    if (redirectToNew)
+                    {
+                         this.$inertia.visit(route('players.create', [this.$page.t.id]).url())
+                    }
+                    else
+                    {
+                        this.$inertia.visit(route('players.edit', [this.$page.t.id, response.data.id]).url())
+                    }
                 })
                 .catch(error => this.errors = error.response.data.errors)
             }

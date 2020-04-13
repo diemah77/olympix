@@ -116,12 +116,12 @@ class Match extends Model
 
         if ($this->p1)
         {
-            $registrations->concat($this->p1->registrations());
+            $registrations = $registrations->concat($this->p1->registrations());
         }
 
         if ($this->p2)
         {
-            $registrations->concat($this->p2->registrations());
+            $registrations = $registrations->concat($this->p2->registrations());
         }
 
         return $registrations;

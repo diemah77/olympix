@@ -10,7 +10,7 @@ class EliminationBracketsDoubleKO extends EliminationBrackets
 	{
 		parent::__construct($phase, $participants);
 
-		$this->losersRounds = collect([]);
+		$this->losersRounds = collect();
 	}
 
 	public function build()
@@ -92,7 +92,7 @@ class EliminationBracketsDoubleKO extends EliminationBrackets
 		{
 			$index = $matchCount / 2;
 
-			if (!$this->isTopHalf($winnerMatchIndex, $matchCount))
+			if (! $this->isTopHalf($winnerMatchIndex, $matchCount))
 			{
 				$index *= 3;
 			}
@@ -135,14 +135,24 @@ class EliminationBracketsDoubleKO extends EliminationBrackets
 
 				if (! is_null($nextRound->previousRound->type))
 				{
+                    $loserMatches = $nextRound->previousRound->nextLosersRound->matches;
+
 					$index = $this->nextLosersMatchIndex($i + 1, $j, $matches->count());
-                    $loserMatch = $nextRound->previousRound->nextLosersRound->matches->get($index-1);
+                    $loserMatch = $loserMatches->get($index-1);
 					$matches->get($i)->nextLosersMatch()->associate($loserMatch)->save();
 
 					if ($matches->count() > 1)
 					{
-						$index = $this->nextLosersMatchIndex($i + 2, $j, $matches->count());
-						$loserMatch = $nextRound->previousRound->nextLosersRound->matches->get($index-1);
+                        if ($loserMatches->count() == 2)
+                        {
+                            $index = 2;
+                        }
+                        else
+                        {
+                            $index = $this->nextLosersMatchIndex($i + 2, $j, $matches->count());
+                        }
+
+						$loserMatch = $loserMatches->get($index-1);
 						$matches->get($i+1)->nextLosersMatch()->associate($loserMatch)->save();
 					}
 				}
@@ -171,7 +181,8 @@ class EliminationBracketsDoubleKO extends EliminationBrackets
 		{
 			$nextRound = $this->phase->phaseable->rounds()->create([
 				'type' => $this->bracketSize / pow(2, $i),
-				'side' => $this->round::SIDE_WINNER
+                'side' => $this->round::SIDE_WINNER,
+                'order' => 3 * $i - 1
 			]);
 
 			$lastRound->nextRound()->associate($nextRound)->save();
@@ -186,7 +197,8 @@ class EliminationBracketsDoubleKO extends EliminationBrackets
 		// Finale 2 erstellen
 		$nextRound = $this->phase->phaseable->rounds()->create([
 			'name' => 'Finale 2',
-			'side' => $this->round::SIDE_WINNER
+            'side' => $this->round::SIDE_WINNER,
+            'order' => 3 * $i - 2
 		]);
 
 		$lastRound->nextRound()->associate($nextRound)->save();
@@ -206,7 +218,8 @@ class EliminationBracketsDoubleKO extends EliminationBrackets
 			$nextRound = $this->phase->phaseable->rounds()->create([
 				'side' => $this->round::SIDE_LOSER,
 				'number' => $i,
-				'name' => "Runde {$i}"
+                'name' => "Runde {$i}",
+                'order' => intval(3/2 * $i)
 			]);
 
 			$lastRound->nextRound()->associate($nextRound)->save();
@@ -214,7 +227,7 @@ class EliminationBracketsDoubleKO extends EliminationBrackets
 
 			$this->losersRounds->push($nextRound);
 		}
-	}
+    }
 
 	/**
 	 * Liefert die entsprechende Verliererrunde. 1-basiert

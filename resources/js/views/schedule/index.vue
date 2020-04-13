@@ -135,7 +135,7 @@
             <div class="flex items-center">
                 <span class="w-1/5 mr-2">Tisch: </span>
 
-                <div class="flex-1">
+                <div class="flex items-center">
                     <el-select v-model="match.table_id" placeholder="Tisch wählen">
                         <el-option
                             v-for="item in freeTables"
@@ -144,7 +144,17 @@
                             :value="item.id">
                         </el-option>
                     </el-select>
+
+                    <icon
+                        class="ml-2 text-green-600 hover:text-green-400 cursor-pointer"
+                        icon="check-circle"
+                        fixed-width
+                        title="Tisch automatisch zuweisen"
+                        @click="assignTable()"
+                    />
                 </div>
+
+                <span v-if="has('table_id')" class="ml-3 text-red-600 text-xs">{{ get('table_id') }}</span>
             </div>
         </div>
 
@@ -243,6 +253,11 @@ export default {
     methods: {
         sort: sort,
 
+        assignTable()
+        {
+            this.match.table_id = this.freeTables[0].id
+        },
+
         showMore()
         {
             this.showing += 20
@@ -256,7 +271,7 @@ export default {
             }
         },
 
-         handleResultUpdate(match)
+        handleResultUpdate(match)
         {
             this.clear('result_id')
             this.updateSets(match)
@@ -295,7 +310,7 @@ export default {
                 this.dialogVisible = false
                 this.$inertia.reload()
             })
-            .catch(error => console.log(error.response))
+            .catch(error => this.errors = error.response.data.errors)
         },
 
         stopMatch()

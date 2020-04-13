@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
 
         if (app()->environment() == 'local')
         {
-            $this->call(TournamentSeeder::class);
+            //$this->call(TournamentSeeder::class);
         }
     }
 }

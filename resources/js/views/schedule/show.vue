@@ -9,7 +9,7 @@
     </div>
 
     <el-table
-        :data="selectedMatches"
+        :data="showedMatches"
         empty-text="Keine Spiele"
         :row-class-name="rowClassName">
 
@@ -68,6 +68,13 @@
             </el-button>
         </el-table-column>
     </el-table>
+
+    <div class="flex justify-center mt-6" v-if="showedMatches.length < selectedMatches.length && selectedMatches.length > 0">
+        <el-button type="primary" @click="showMore">
+            <icon class="mr-1" icon="plus" fixed-width></icon>
+            Mehr Spiele zeigen
+        </el-button>
+    </div>
 
     <el-dialog
         @close="resetDialog"
@@ -129,7 +136,7 @@
             <div class="flex items-center">
                 <span class="w-1/5 mr-2">Tisch: </span>
 
-                <div class="flex-1">
+                <div class="flex items-center">
                     <el-select v-model="match.table_id" placeholder="Tisch wählen">
                         <el-option
                             v-for="item in freeTables"
@@ -138,7 +145,11 @@
                             :value="item.id">
                         </el-option>
                     </el-select>
+
+                    <icon class="ml-2" icon="check-circle" fixed-width title="Tisch automatisch zuweisen" />
                 </div>
+
+                <span v-if="has('table_id')" class="ml-3 text-red-600 text-xs">{{ get('table_id') }}</span>
             </div>
         </div>
 
@@ -200,10 +211,16 @@ export default {
                 table_id: '',
                 sets: []
             },
+            showing: 30
 		}
 	},
 
     computed: {
+        showedMatches()
+        {
+            return this.selectedMatches.slice(0, this.showing)
+        },
+
         relevants()
         {
             return sort(this.matches.filter(m => m.relevant)).by([
@@ -215,7 +232,7 @@ export default {
 
         selectedMatches()
         {
-            return this.form.relevant ? this.relevants : this.matches.slice(0,30)
+            return this.form.relevant ? this.relevants : this.matches
         },
 
         orderedTables()
@@ -236,6 +253,11 @@ export default {
 
     methods: {
         sort: sort,
+
+        showMore()
+        {
+            this.showing += 20
+        },
 
         rowClassName({row, index})
         {
@@ -301,7 +323,7 @@ export default {
                 this.dialogVisible = false
                 this.$inertia.reload()
             })
-            .catch(error => console.log(error.response))
+            .catch(error => this.errors = error.response.data.errors)
         },
 
         stopMatch()

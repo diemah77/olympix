@@ -111,8 +111,9 @@ class GroupElimination
 
 	private function createGroups()
 	{
-        $this->groups = factory('App\Group', $this->groupCount)->create(['group_phase_id' => $this->phase->groupPhase()->id]);
-
+        $this->groups = factory('App\Group', $this->groupCount)->create([
+            'group_phase_id' => $this->phase->groupPhase()->id
+        ]);
 	}
 
 	private function calcGroupCount()

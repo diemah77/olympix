@@ -20,6 +20,7 @@ class CreateTournamentsTable extends Migration
             $table->integer('tables_count');
             $table->integer('tables_rows')->default(1);
             $table->integer('tables_transponed')->default(0);
+            $table->integer('tables_enforce_assignment')->default(1);
             $table->integer('championships_count')->default(0);
             $table->boolean('published')->default(0);
             $table->string('qr_code_src')->nullable();

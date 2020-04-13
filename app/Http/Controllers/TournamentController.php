@@ -31,6 +31,7 @@ class TournamentController extends Controller
             'tournament' => [
                 'name' => '',
                 'tables_count' => '',
+                'tables_enforce_assignment' => true,
                 'mode' => 'create'
             ],
             'mode' => 'create'
@@ -42,11 +43,12 @@ class TournamentController extends Controller
         $data = $this->validate(request(), [
             'name' => 'required',
             'tables_count' => 'required|numeric|min:1',
+            'tables_enforce_assignment' => '',
         ]);
 
-        auth()->user()->tournaments()->create($data);
+        $tournament = auth()->user()->tournaments()->create($data);
 
-        return response('OK', 201);
+        return response($tournament, 200);
     }
 
     public function edit(Tournament $tournament)
@@ -56,6 +58,7 @@ class TournamentController extends Controller
                 'id' => $tournament->id,
                 'name' => $tournament->name,
                 'tables_count' => $tournament->tables_count,
+                'tables_enforce_assignment' => $tournament->tables_enforce_assignment,
                 'qr_code_src' => $tournament->qr_code_src,
                 'published' => $tournament->published,
                 'results_route' => $tournament->resultsRoute(),
@@ -68,12 +71,13 @@ class TournamentController extends Controller
     public function update(Tournament $tournament)
     {
         $data = $this->validate(request(), [
-            'name' => 'required'
+            'name' => 'required',
+            'tables_enforce_assignment' => ''
         ]);
 
         $tournament->update($data);
 
-        return response('OK', 200);
+        return response($tournament, 200);
     }
 
     public function tables(Tournament $tournament)
@@ -89,6 +93,13 @@ class TournamentController extends Controller
     public function publish(Tournament $tournament)
     {
         $tournament->publish();
+
+        return response('OK', 200);
+    }
+
+    public function unpublish(Tournament $tournament)
+    {
+        $tournament->unpublish();
 
         return response('OK', 200);
     }

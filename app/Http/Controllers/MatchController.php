@@ -10,11 +10,16 @@ use App\Events\MatchStarted;
 use App\Events\MatchStopped;
 use App\Rules\ValidMatchSets;
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rule;
 
 class MatchController extends Controller
 {
     public function start(Tournament $tournament, Championship $championship, Match $match)
     {
+        $this->validate(request(), [
+            'table_id' => Rule::requiredIf($tournament->tables_enforce_assignment)
+        ]);
+
         if (request()->filled('table_id'))
         {
         	$table = Table::findOrFail(request()->table_id);

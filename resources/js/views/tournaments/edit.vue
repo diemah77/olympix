@@ -18,6 +18,11 @@
                 <span v-if="has('tables_count')" class="ml-3 text-red-600 text-xs">{{ get('tables_count') }}</span>
             </div>
 
+            <div class="flex items-center mb-8">
+                <div class="w-1/5 mr-8"></div>
+                <el-checkbox v-model="form.tables_enforce_assignment" label="Tischzuweisung erzwingen"></el-checkbox>
+            </div>
+
             <template v-if="tournament.id">
                 <div class="flex items-center mb-8">
                     <label class="label w-1/5 text-right mr-8">URL</label>
@@ -45,19 +50,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- <div v-if="tournament.published" class="w-2/5 pl-6 border-l border-gray-300">
-            <h1 class="text-lg font-bold mb-6">Live-Ergebnisse</h1>
-
-            <div class="mb-8">
-                <label class="label block">URL</label>
-                <a class="link text-blue-600 hover:text-blue-400 hover:underline" :href="tournament.results_route" target="_blank">{{ tournament.results_route }}</a>
-            </div>
-
-            <div class="mb-8">
-                <img :src="'/qrcodes/' + tournament.qr_code_src">
-            </div>
-        </div> -->
     </div>
 </box>
 </template>
@@ -116,7 +108,7 @@ export default {
 
             request.then(response =>
             {
-                this.$inertia.visit(route('tournaments.index'))
+                this.$inertia.visit(route('tournaments.edit', [response.data.id]))
             })
             .catch(error => this.errors = error.response.data.errors)
         }

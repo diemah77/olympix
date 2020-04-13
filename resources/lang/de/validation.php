@@ -179,6 +179,7 @@ return [
         'sets'                  => 'Sätze',
         'result_id'             => 'Ergebnis',
         'system_id'             => 'Spielsystem',
-        'type_id'             => 'Spieltyp',
+        'type_id'               => 'Spieltyp',
+        'table_id'               => 'Tisch',
     ],
 ];

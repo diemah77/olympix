@@ -99,7 +99,8 @@ class KoPhase extends Phase
     {
         $finalRound = $this->rounds()->create([
             'name' => 'Finale 3',
-            'side' => $match->matchable::SIDE_WINNER
+            'side' => $match->matchable::SIDE_WINNER,
+            'order' => $this->rounds()->count() + 1
         ]);
 
         $match->matchable->nextRound()->associate($finalRound)->save();

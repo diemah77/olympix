@@ -13,8 +13,11 @@ class Tournament extends Model
     use HasStatus;
 
     protected $casts = [
-        'table_count' => 'integer',
-        'table_rows' => 'integer',
+        'tables_count' => 'integer',
+        'tables_rows' => 'integer',
+        'tables_transponed' => 'boolean',
+        'tables_enforce_assignment' => 'boolean',
+        'enforce_' => 'boolean',
         'status' => 'integer',
         'published' => 'boolean'
     ];
@@ -142,7 +145,16 @@ class Tournament extends Model
                 'sets',
                 'table'
             ])
-            ->get();
+            ->orderBy('championship_id')
+            ->get()
+            ->sortBy(function ($match)
+            {
+                return [
+                    $match->championship_id,
+                    $match->matchable->order,
+                    $match->id
+                ];
+            });
 
         Cache::put($this->cacheKey(), $matches, now()->addHour());
     }

@@ -5,9 +5,9 @@
     </template>
 
     <template slot="buttons" v-if="route().current('tournaments.edit')">
-        <el-button :type="tournament.published ? 'primary' : 'success'" @click="publish()" :disabled="tournament.published">
+        <el-button :type="tournament.published ? 'warning' : 'success'" @click="togglePublished()">
             <icon class="mr-1" icon="cloud-upload-alt" fixed-width />
-            <span>{{ tournament.published ? 'Turnierergebnisse sind live' : 'Veröffentlichen' }}</span>
+            <span>{{ tournament.published ? 'Veröffentlichung zurücknehmen' : 'Veröffentlichen' }}</span>
         </el-button>
     </template>
 
@@ -40,9 +40,16 @@ export default {
     },
 
     methods: {
-        publish()
+        togglePublished()
         {
-            axios.post(route('tournaments.publish', [this.tournament.id]).url()).then(() => this.$inertia.reload())
+            if (this.tournament.published)
+            {
+                axios.post(route('tournaments.unpublish', [this.tournament.id]).url()).then(() => this.$inertia.reload())
+            }
+            else
+            {
+                axios.post(route('tournaments.publish', [this.tournament.id]).url()).then(() => this.$inertia.reload())
+            }
         }
     }
 }

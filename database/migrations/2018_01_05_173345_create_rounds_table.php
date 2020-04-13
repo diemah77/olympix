@@ -17,6 +17,7 @@ class CreateRoundsTable extends Migration
             $table->increments('id');
             $table->string('name')->nullable();
             $table->integer('number')->nullable();
+            $table->integer('order');
             $table->boolean('side')->nullable();
             $table->integer('type')->nullable();
             $table->unsignedInteger('ko_phase_id');

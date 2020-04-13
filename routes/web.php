@@ -6,31 +6,12 @@ Route::get('login')->name('login')->uses('Auth\LoginController@showLoginForm')->
 Route::post('login')->name('login.attempt')->uses('Auth\LoginController@login')->middleware('guest');
 Route::get('logout')->name('logout')->uses('Auth\LoginController@logout');
 
-Route::get('/results/{tournament:hash}', 'ResultController')->name('results');
-// Route::get('/results/{tournament:hash}', function(App\Tournament $tournament)
-// {
-//     $championship = $tournament->championships->first();
-//     $phase = $championship->phases()->orderBy('order')->first();
-
-//     return redirect()->route('results.show', [
-//         'tournament' => $tournament,
-//         'championship' => $championship,
-//         'phase' => $phase]);
-// })
-// ->name('results');
-
-Route::get('/results/{tournament:hash}/{championship:slug}', function(App\Tournament $tournament, App\Championship $championship)
+Route::group(['prefix' => 'results', 'middleware' => 'results'], function ()
 {
-    $phase = $championship->phases()->orderBy('order')->first();
-
-    return redirect()->route('results.show', [
-        'tournament' => $tournament,
-        'championship' => $championship,
-        'phase' => $phase]);
-})
-->name('results.championship');
-
-Route::get('/results/{tournament:hash}/{championship:slug}/{phase:id}', 'ResultController@show')->name('results.show');
+    Route::get('/{tournament:hash}', 'ResultController')->name('results');
+    Route::get('/{tournament:hash}/{championship:slug}', 'ResultController@championship')->name('results.championship');
+    Route::get('/{tournament:hash}/{championship:slug}/{phase:id}', 'ResultController@show')->name('results.show');
+});
 
 Route::get('/', function()
 {
@@ -45,6 +26,7 @@ Route::group(['prefix' => 'tournaments', 'middleware' => 'auth'], function()
     Route::get('/{tournament}', 'TournamentController@edit')->name('tournaments.edit');
     Route::put('/{tournament}', 'TournamentController@update')->name('tournaments.update');
     Route::post('/{tournament}/publish', 'TournamentController@publish')->name('tournaments.publish');
+    Route::post('/{tournament}/unpublish', 'TournamentController@unpublish')->name('tournaments.unpublish');
     Route::get('/{tournament}/qr_code', 'TournamentController@downloadQRCode')->name('tournaments.qr_code');
 
     Route::group(['prefix' => '/{tournament}'], function()

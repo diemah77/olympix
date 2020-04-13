@@ -31,7 +31,8 @@ abstract class EliminationBrackets
 		$this->calculateBracketSize();
 		$this->firstRound = $this->koPhase->rounds()->create([
 			'type' => $this->bracketSize,
-			'side' => $this->round::SIDE_WINNER
+            'side' => $this->round::SIDE_WINNER,
+            'order' => 0
 		]);
 	}
 

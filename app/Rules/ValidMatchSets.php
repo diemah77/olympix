@@ -71,6 +71,15 @@ class ValidMatchSets implements Rule
             }
         }
 
+        // Bei Sieg von p2 muss der letzte Satz zu seinen Gunsten sein
+        if ($this->result->right > $this->result->left)
+        {
+            if (intval($sets->last()['points']) > 0)
+            {
+                return false;
+            }
+        }
+
         return true;
     }
 

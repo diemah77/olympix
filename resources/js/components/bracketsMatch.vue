@@ -15,8 +15,12 @@
 
             <template v-if="!isDraw">
                 <icon v-if="match.result.left == 'check'" class="text-green-400" icon="check"></icon>
-                <span :title="match.result.sets" v-else v-html="match.result.left"></span>
+                <span v-else v-html="match.result.left"></span>
             </template>
+        </div>
+
+        <div v-if="!isDraw && match.winner" class="flex text-xs justify-end border-l-4 border-gray-400 font-bold p-1">
+            <span class="mx-1" v-for="set in match.result.sets" :key="set.id">{{ set.points }}</span>
         </div>
 
         <div class="flex justify-between items-center p-2 rounded-b border-l-4 border-orange-400"
@@ -26,7 +30,7 @@
 
             <template v-if="!isDraw">
                 <icon v-if="match.result.right == 'check'" class="text-green-400" icon="check"></icon>
-                <span :title="match.result.sets" v-else v-html="match.result.right"></span>
+                <span v-else v-html="match.result.right"></span>
             </template>
         </div>
     </div>

@@ -74,7 +74,8 @@ class EliminationBracketsSingleKO extends EliminationBrackets
             {
                 $nextLosersRound = $this->phase->phaseable->rounds()->create([
                     'name' => 'Spiel um Platz 3',
-                    'side' => $this->round::SIDE_WINNER
+                    'side' => $this->round::SIDE_WINNER,
+                    'order' => $i
                 ]);
 
                 $lastRound->nextLosersRound()->associate($nextLosersRound)->save();
@@ -82,7 +83,8 @@ class EliminationBracketsSingleKO extends EliminationBrackets
 
 			$nextRound = $this->phase->phaseable->rounds()->create([
 				'type' => $this->bracketSize / pow(2, $i),
-				'side' => $this->round::SIDE_WINNER
+                'side' => $this->round::SIDE_WINNER,
+                'order' => $i + 1
 			]);
 
 			$lastRound->nextRound()->associate($nextRound)->save();
