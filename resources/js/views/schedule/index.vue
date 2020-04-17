@@ -75,7 +75,7 @@
         </el-button>
     </div>
 
-    <el-dialog
+    <!-- <el-dialog
         @close="resetDialog"
         :title="dialogTitle"
         :visible.sync="dialogVisible"
@@ -83,100 +83,25 @@
         append-to-body
         :modal="true">
 
-        <div class="flex items-center mb-6">
-            <span class="mr-3 font-bold">{{ match.p1 }}</span>
-            <span class="mr-3">-</span>
-            <span class="font-bold">{{ match.p2 }}</span>
-            <div v-if="match.handicap" class="font-bold ml-6 py-1 px-2 bg-orange-200 rounded">{{ match.handicap }}</div>
-        </div>
+        <match :match="match" :tables="freeTables"></match>
+    </el-dialog> -->
 
-        <div v-if="match.isStarted">
-            <div class="flex items-center mb-4">
-                <span class="w-1/5 mr-2">Ergebnis: </span>
-
-                <div class="flex-1">
-                    <el-select
-                        v-model="match.result_id"
-                        placeholder="Ergebnis"
-                        clearable
-                        @clear="handleResultClear(match)"
-                        @change="handleResultUpdate(match)">
-
-                        <el-option
-                            v-for="item in championshipResults"
-                            :key="item.id"
-                            :label="item.label"
-                            :value="item.id">
-                        </el-option>
-                    </el-select>
-
-                    <span v-if="has('result_id')" class="ml-3 text-red-600 text-xs">{{ get('result_id') }}</span>
-                </div>
-            </div>
-
-            <div class="flex items-center">
-                <span class="w-1/5 mr-2">Sätze: </span>
-
-                <div class="flex-1">
-                    <el-input
-                        class="w-16 mr-2"
-                        v-for="set in match.sets"
-                        v-model="set.points"
-                        @change="clear('sets')"
-                        :key="set.id">
-                    </el-input>
-
-                    <span v-if="has('sets')" class="ml-3 text-red-600 text-xs">{{ get('sets') }}</span>
-                </div>
-            </div>
-        </div>
-
-        <div v-else class="mb-4">
-            <div class="flex items-center">
-                <span class="w-1/5 mr-2">Tisch: </span>
-
-                <div class="flex items-center">
-                    <el-select v-model="match.table_id" placeholder="Tisch wählen">
-                        <el-option
-                            v-for="item in freeTables"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                        </el-option>
-                    </el-select>
-
-                    <icon
-                        class="ml-2 text-green-600 hover:text-green-400 cursor-pointer"
-                        icon="check-circle"
-                        fixed-width
-                        title="Tisch automatisch zuweisen"
-                        @click="assignTable()"
-                    />
-                </div>
-
-                <span v-if="has('table_id')" class="ml-3 text-red-600 text-xs">{{ get('table_id') }}</span>
-            </div>
-        </div>
-
-        <div slot="footer" class="dialog-footer">
-            <el-button type="text" @click="dialogVisible = false">Abbrechen</el-button>
-
-            <el-button v-if="match.isStarted" type="primary" @click="stopMatch()">Spiel beenden</el-button>
-
-            <el-button v-else type="success" @click="startMatch()">
-                <icon class="mr-1" icon="play" fixed-width></icon>
-                Spiel starten
-            </el-button>
-        </div>
-    </el-dialog>
+    <match
+        :visible.sync="dialogVisible"
+        :match="match"
+        :tables="tables"
+        :results="championshipResults"
+        @started="reload()"
+        @stopped="reload()">
+    </match>
 </box>
 </template>
 
 <script>
 import sort from 'fast-sort'
 import admin from '@/views/layouts/admin'
-import validation from '@/mixins/validation'
 import schedule from '@/views/layouts/schedule'
+import Match from '@/components/match'
 
 export default {
     layout: (h, page) => {
@@ -185,15 +110,17 @@ export default {
         ])
     },
 
-    mixins: [validation],
-
     props: {
         matches: Array,
         tables: Array,
         results: Array
     },
 
-    remember: 'form',
+    components: {
+        Match
+    },
+
+    remember: ['form'],
 
     data()
     {
@@ -202,7 +129,6 @@ export default {
                 running: false
             },
             dialogVisible: false,
-            dialogTitle: '',
             match: {},
             showing: 20
         }
@@ -229,21 +155,6 @@ export default {
             return this.form.running ? this.running : this.showedMatches
         },
 
-        orderedTables()
-        {
-            return sort(this.tables).asc(t => t.name)
-        },
-
-        freeTables()
-        {
-            return this.orderedTables.filter(t => t.busy == false)
-        },
-
-        setsCount()
-        {
-            return this.match.result_id ? this.results.find(r => r.id == this.match.result_id).setCount : this.match.winningSets
-        },
-
         championshipResults()
         {
             return this.results.filter(r => r.size == this.match.setsCount)
@@ -253,9 +164,10 @@ export default {
     methods: {
         sort: sort,
 
-        assignTable()
+        reload()
         {
-            this.match.table_id = this.freeTables[0].id
+            this.dialogVisible = false
+            this.$inertia.reload()
         },
 
         showMore()
@@ -271,58 +183,6 @@ export default {
             }
         },
 
-        handleResultUpdate(match)
-        {
-            this.clear('result_id')
-            this.updateSets(match)
-        },
-
-        handleResultClear(match)
-        {
-            this.clear('sets')
-            match.sets.forEach(s => s.points = "")
-        },
-
-        updateSets(match)
-        {
-            let diff = this.setsCount - match.sets.length
-
-            if (diff > 0)
-            {
-                for (let i = 1; i <= diff; i++)
-                {
-                    match.sets.push({ points: ''})
-                }
-            }
-            else if (diff < 0)
-            {
-                for (let i = 1; i <= Math.abs(diff); i++)
-                {
-                    match.sets.pop()
-                }
-            }
-        },
-
-        startMatch()
-        {
-            axios.post(route('matches.start', [this.$page.t.id, this.match.championship_id, this.match.id]).url(), this.match).then(response =>
-            {
-                this.dialogVisible = false
-                this.$inertia.reload()
-            })
-            .catch(error => this.errors = error.response.data.errors)
-        },
-
-        stopMatch()
-        {
-            axios.post(route('matches.stop', [this.$page.t.id, this.match.championship_id, this.match.id]).url(), this.match).then(response =>
-            {
-                this.dialogVisible = false
-                this.$inertia.reload()
-            })
-            .catch(error => this.errors = error.response.data.errors)
-        },
-
         show(match)
         {
             this.match = JSON.parse(JSON.stringify(match))
@@ -330,7 +190,7 @@ export default {
             this.dialogVisible = true
         },
 
-        resetDialog()
+        resetMatch()
         {
             this.match = {
                 isStarted: false,

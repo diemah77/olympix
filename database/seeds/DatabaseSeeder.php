@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
 
         if (app()->environment() == 'local')
         {
-            //$this->call(TournamentSeeder::class);
+            $this->call(TournamentSeeder::class);
         }
     }
 }
@@ -139,12 +139,12 @@ class TournamentSeeder extends Seeder {
     public function run()
     {
         $u = App\User::first();
-        $t = factory(App\Tournament::class)->create(['name' => 'Pfannenturnier', 'user_id' => $u->id]);
+        $t = factory(App\Tournament::class)->create(['name' => 'Pfannenturnier', 'user_id' => $u->id, 'tables_count' => 16]);
         $players = factory(App\Player::class, 16)->create(['tournament_id' => $t->id]);
         $c = factory(App\Championship::class)->create([
             'tournament_id' => $t->id,
             'name' => 'Einzel',
-            'system_id' => 1,
+            'system_id' => 2,
             'third_place' => false,
             'type_id' => 1,
             'sets' => 5

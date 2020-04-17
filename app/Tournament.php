@@ -15,8 +15,8 @@ class Tournament extends Model
     protected $casts = [
         'tables_count' => 'integer',
         'tables_rows' => 'integer',
-        'tables_transponed' => 'boolean',
         'tables_enforce_assignment' => 'boolean',
+        'tables_transformations' => 'array',
         'enforce_' => 'boolean',
         'status' => 'integer',
         'published' => 'boolean'

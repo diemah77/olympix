@@ -53,3 +53,9 @@
 .el-table th, .el-table td {
     padding: 10px 0;
 }
+
+.el-dialog__footer {
+    padding-top: theme('spacing.5');
+    padding-bottom: theme('spacing.5');
+    border-top: 1px solid theme('colors.gray.200');
+}

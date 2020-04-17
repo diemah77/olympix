@@ -53,7 +53,6 @@ class KoPhase extends Phase
 
     public function proceedMatch($match)
     {
-        // Sieger und Verlierer ermitteln
         $winner = $match->getWinner();
         $loser = $match->getLoser();
         $loser->increment('defeats');
@@ -63,10 +62,6 @@ class KoPhase extends Phase
         if ($this->phase->championship->isDoubleElimination())
         {
             $nextMatchForLoser = $match->matchable->isWinner() ? $match->nextLosersMatch : $nextMatchForWinner;
-
-            logger($match);
-            logger($nextMatchForLoser);
-            logger($nextMatchForWinner);
 
             if ($match->matchable->name == 'Finale 2')
             {

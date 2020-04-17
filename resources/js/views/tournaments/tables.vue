@@ -11,13 +11,20 @@
             </el-input-number>
         </div>
 
-        <div class="flex items-center ml-auto">
-            <el-button type="primary" @click="transpose()">Reihen spiegeln</el-button>
-            <el-button type="primary" @click="rotate()">Tische um 90° drehen</el-button>
+        <div class="flex items-center ml-6">
+            <el-checkbox-group v-model="form.tables_transformations" @change="handleChange">
+                <el-checkbox-button label="transpose" >Um 90° drehen</el-checkbox-button>
+                <el-checkbox-button label="reflect_horizontally">Horizontal spiegeln</el-checkbox-button>
+                <el-checkbox-button label="reflect_vertically">Vertikal spiegeln</el-checkbox-button>
+            </el-checkbox-group>
+        </div>
+
+        <div class="ml-auto">
+            <el-button type="primary" plain @click="rotate()">Tische um 90° drehen</el-button>
         </div>
     </box>
 
-    <div v-for="(chunk, index) in chunkedTables" :key="index" class="flex">
+    <div v-for="(chunk, index) in modifiedTables" :key="index" class="flex">
         <olympix-table
             v-for="table in chunk"
             :key="table.id"
@@ -34,6 +41,7 @@ import validation from '@/mixins/validation'
 import tournament from '@/views/layouts/tournament'
 import OlympixTable from '@/components/olympix-table'
 import chunk from '@/mixins/chunk'
+import sort from 'fast-sort'
 
 export default {
     components: {
@@ -73,35 +81,45 @@ export default {
 			form: {
                 ...this.tournament
             },
-            tables: [...this.initialTables]
+            tables: [...this.initialTables],
+            modifiedTables: []
 		}
     },
 
-    computed: {
-        chunkedTables()
-        {
-            const tables = this.chunk(this.tables, Math.ceil(this.tables.length / this.form.tables_rows))
-
-            if (this.form.tables_transponed)
-            {
-                return tables.reduce((r, a, i, { length }) =>
-                {
-                    a.forEach((v, j) =>
-                    {
-                        r[j] = r[j] || []
-                        r[j][i] = v
-                    })
-
-                    return r
-                }, [])
-            }
-
-            return tables
-        }
+    created()
+    {
+        this.applyTransforms()
     },
 
     methods: {
         chunk: chunk,
+        sort: sort,
+
+        handleChange(values)
+        {
+            this.applyTransforms()
+            this.update()
+        },
+
+        applyTransforms()
+        {
+            this.modifiedTables = this.chunk(this.tables, Math.ceil(this.tables.length / this.form.tables_rows))
+
+            if (this.form.tables_transformations.some(t => t == 'transpose'))
+            {
+                this.transpose()
+            }
+
+            if (this.form.tables_transformations.some(t => t == 'reflect_horizontally'))
+            {
+                this.reflectHorizontally()
+            }
+
+            if (this.form.tables_transformations.some(t => t == 'reflect_vertically'))
+            {
+                this.reflectVertically()
+            }
+        },
 
         save()
         {
@@ -133,8 +151,50 @@ export default {
 
         transpose()
         {
-            this.form.tables_transponed = !this.form.tables_transponed
-            this.update()
+            this.modifiedTables = this.modifiedTables.reduce((r, a, i, { length }) =>
+                {
+                    a.forEach((v, j) =>
+                    {
+                        r[j] = r[j] || []
+                        r[j][i] = v
+                    })
+
+                    return r
+                }, [])
+        },
+
+        reflectHorizontally()
+        {
+            this.modifiedTables = this.modifiedTables.map(row => row.reverse())
+        },
+
+        reflectVertically()
+        {
+            let tables = this.modifiedTables.reduce((r, a, i, { length }) =>
+                {
+                    a.forEach((v, j) =>
+                    {
+                        r[j] = r[j] || []
+                        r[j][i] = v
+                    })
+
+                    return r
+                }, [])
+
+            tables = tables.map(row => row.reverse())
+
+            tables = tables.reduce((r, a, i, { length }) =>
+                {
+                    a.forEach((v, j) =>
+                    {
+                        r[j] = r[j] || []
+                        r[j][i] = v
+                    })
+
+                    return r
+                }, [])
+
+            this.modifiedTables = tables
         }
     }
 }

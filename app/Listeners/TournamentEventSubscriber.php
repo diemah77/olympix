@@ -6,7 +6,6 @@ class TournamentEventSubscriber
 {
     public function updateCache($event)
     {
-        logger(get_class($event));
         $event->tournament->cacheMatches();
     }
 
@@ -29,6 +28,11 @@ class TournamentEventSubscriber
 
         $events->listen(
             'App\Events\MatchStopped',
+            'App\Listeners\TournamentEventSubscriber@updateCache'
+        );
+
+        $events->listen(
+            'App\Events\MatchReset',
             'App\Listeners\TournamentEventSubscriber@updateCache'
         );
     }

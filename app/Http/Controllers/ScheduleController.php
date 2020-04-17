@@ -40,7 +40,8 @@ class ScheduleController extends Controller
                 'sets' => $m->sets,
                 'table_id' => $m->table_id,
                 'table' => optional($m->table)->name,
-                'isStarted' => $m->isStarted()
+                'isStarted' => $m->isStarted(),
+                'isRegular' => $m->isRegular()
             ];
         })
         ->values();
@@ -110,10 +111,13 @@ class ScheduleController extends Controller
         {
             return [
                 'id' => $m->id,
+                'championship' => $m->championship->name,
+                'championship_id' => $m->championship_id,
                 'table' => optional($m->table)->name,
                 'statusName' => $m->statusName(),
                 'isStarted' => $m->isStarted(),
                 'isFinished' => $m->isFinished(),
+                'isRegular' => $m->isRegular(),
                 'handicap' => $m->handicap(),
                 'relevant' => $m->isStarted() || ($hasFreeTables && $m->isRegular() && !$m->isFinished() && !$m->hasInvolvedPlayers()),
                 'p1' => $m->p1 ? $m->p1->fullname() : '',

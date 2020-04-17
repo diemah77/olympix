@@ -6,6 +6,7 @@ $factory->define(App\Tournament::class, function (Faker $faker) {
     return [
         'name' => $faker->word,
         'tables_count' => $faker->numberBetween(3,5),
+        'tables_transformations' => [],
         'status' => 1
     ];
 });

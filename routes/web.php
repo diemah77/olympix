@@ -80,6 +80,7 @@ Route::group(['prefix' => 'tournaments', 'middleware' => 'auth'], function()
 
             Route::post('/matches/{match}/start', 'MatchController@start')->name('matches.start');
             Route::post('/matches/{match}/stop', 'MatchController@stop')->name('matches.stop');
+            Route::post('/matches/{match}/reset', 'MatchController@reset')->name('matches.reset');
         });
     });
 });

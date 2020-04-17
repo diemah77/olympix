@@ -76,7 +76,16 @@
         </el-button>
     </div>
 
-    <el-dialog
+    <match
+        :visible.sync="dialogVisible"
+        :match="match"
+        :tables="tables"
+        :results="results"
+        @started="reload()"
+        @stopped="reload()">
+    </match>
+
+    <!-- <el-dialog
         @close="resetDialog"
         :title="dialogTitle"
         :visible.sync="dialogVisible"
@@ -146,7 +155,13 @@
                         </el-option>
                     </el-select>
 
-                    <icon class="ml-2" icon="check-circle" fixed-width title="Tisch automatisch zuweisen" />
+                    <el-button type="primary" @click="assignTable()" circle>
+                        <icon
+                            class="ml-2 text-green-600 hover:text-green-400 cursor-pointer"
+                            icon="check-circle"
+                            fixed-width
+                        />
+                    </el-button>
                 </div>
 
                 <span v-if="has('table_id')" class="ml-3 text-red-600 text-xs">{{ get('table_id') }}</span>
@@ -163,18 +178,20 @@
                 Spiel starten
             </el-button>
         </div>
-    </el-dialog>
+    </el-dialog> -->
 </div>
 </template>
 
 <script>
 import sort from 'fast-sort'
 import admin from '@/views/layouts/admin'
-import validation from '@/mixins/validation'
 import schedule from '@/views/layouts/scheduled-championships'
+import Match from '@/components/match'
 
 export default {
-    mixins: [validation],
+    components: {
+        Match
+    },
 
     props: {
         championship: Object,
@@ -190,7 +207,7 @@ export default {
         ])
     },
 
-    remember: 'form',
+    remember: ['form'],
 
 	data()
 	{
@@ -199,18 +216,7 @@ export default {
                 relevant: true
             },
             dialogVisible: false,
-            dialogTitle: '',
-            match: {
-                isStarted: false,
-                statusName: false,
-                matchable: '',
-                phase: '',
-                p1: '',
-                p2: '',
-                result_id: '',
-                table_id: '',
-                sets: []
-            },
+            match: {},
             showing: 30
 		}
 	},
@@ -233,26 +239,17 @@ export default {
         selectedMatches()
         {
             return this.form.relevant ? this.relevants : this.matches
-        },
-
-        orderedTables()
-        {
-            return sort(this.tables).asc(t => t.name)
-        },
-
-        freeTables()
-        {
-            return this.orderedTables.filter(t => t.busy == false)
-        },
-
-        setsCount()
-        {
-            return this.match.result_id ? this.results.find(r => r.id == this.match.result_id).setCount : this.championship.winningSets
-        },
+        }
     },
 
     methods: {
         sort: sort,
+
+        reload()
+        {
+            this.dialogVisible = false
+            this.$inertia.reload()
+        },
 
         showMore()
         {
@@ -267,7 +264,7 @@ export default {
             }
         },
 
-        resetDialog()
+        resetMatch()
         {
             this.match = {
                 isStarted: false,
@@ -284,62 +281,9 @@ export default {
             this.clear()
         },
 
-        handleResultUpdate(match)
-        {
-            this.clear('result_id')
-            this.updateSets(match)
-        },
-
-        handleResultClear(match)
-        {
-            this.clear('sets')
-            match.sets.forEach(s => s.points = "")
-        },
-
-        updateSets(match)
-        {
-            let diff = this.setsCount - match.sets.length
-
-            if (diff > 0)
-            {
-                for (let i = 1; i <= diff; i++)
-                {
-                    match.sets.push({ points: ''})
-                }
-            }
-            else if (diff < 0)
-            {
-                for (let i = 1; i <= Math.abs(diff); i++)
-                {
-                    match.sets.pop()
-                }
-            }
-        },
-
-        startMatch()
-        {
-            axios.post(route('matches.start', [this.$page.t.id, this.championship.id, this.match.id]).url(), this.match).then(response =>
-            {
-                this.dialogVisible = false
-                this.$inertia.reload()
-            })
-            .catch(error => this.errors = error.response.data.errors)
-        },
-
-        stopMatch()
-        {
-            axios.post(route('matches.stop', [this.$page.t.id, this.championship.id, this.match.id]).url(), this.match).then(response =>
-            {
-                this.dialogVisible = false
-                this.$inertia.reload()
-            })
-            .catch(error => this.errors = error.response.data.errors)
-        },
-
         show(match)
         {
             this.match = JSON.parse(JSON.stringify(match))
-            this.dialogTitle = 'Spiel ' + match.id + ' - ' + this.championship.name
             this.dialogVisible = true
         },
 
@@ -356,6 +300,7 @@ export default {
 
         isDisabled(match)
         {
+            // return ! match.isRegular
             return !this.relevants.some(m => m.id == match.id)
         }
     }

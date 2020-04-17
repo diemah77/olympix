@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Tournament;
 use Inertia\Inertia;
-use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 
 class TournamentController extends Controller
@@ -32,6 +31,7 @@ class TournamentController extends Controller
                 'name' => '',
                 'tables_count' => '',
                 'tables_enforce_assignment' => true,
+                'tables_transformations' => [],
                 'mode' => 'create'
             ],
             'mode' => 'create'
@@ -44,6 +44,7 @@ class TournamentController extends Controller
             'name' => 'required',
             'tables_count' => 'required|numeric|min:1',
             'tables_enforce_assignment' => '',
+            'tables_transformations' => [],
         ]);
 
         $tournament = auth()->user()->tournaments()->create($data);
@@ -72,7 +73,8 @@ class TournamentController extends Controller
     {
         $data = $this->validate(request(), [
             'name' => 'required',
-            'tables_enforce_assignment' => ''
+            'tables_enforce_assignment' => '',
+            'tables_transformations' => [],
         ]);
 
         $tournament->update($data);
@@ -83,8 +85,8 @@ class TournamentController extends Controller
     public function tables(Tournament $tournament)
     {
         $tournament->update([
-            'tables_transponed' => request()->tables_transponed,
-            'tables_rows' => request()->tables_rows
+            'tables_rows' => request()->tables_rows,
+            'tables_transformations' => request()->tables_transformations
         ]);
 
         return response('OK', 200);

@@ -69,36 +69,44 @@ class EliminationBracketsDoubleKO extends EliminationBrackets
 		endwhile;
 	}
 
-	// Ermittle das zugehörige Match der Verliererrunde für den Verlierer
-	private function nextLosersMatchIndex($winnerMatchIndex, $roundIndex, $matchCount)
+	/**
+     * Ermittle das zugehörige Match der Verliererrunde für den Verlierer
+     */
+	protected function nextLosersMatchIndex($winnerMatchIndex, $roundIndex, $matchCount) : int
 	{
-        if ($matchCount == 1)
+        // In Runde 1 und im Finale bleiben alle Verlierer in ihren Hälften
+        if ($roundIndex == 1 || $matchCount == 1)
         {
-            return 1;
+            return intval($winnerMatchIndex / 2);
         }
+
+        // Ab Runde 2 wechseln Verlierer über Kreuz
+        $offset = $winnerMatchIndex % 2 == 0 ? 1 : -1;
+
+        return intval($winnerMatchIndex + $offset);
 
 		// Erste und ab der 4. Runde
 		$index = ceil($winnerMatchIndex / 2);
 
 		// Zweite Runde
-		if ($roundIndex == 2)
-		{
-			$direction = $this->isTopHalf($winnerMatchIndex, $matchCount) ? 1 : -1;
-			$index = $winnerMatchIndex + ($matchCount * $direction / 2);
-		}
+		// if ($roundIndex == 2)
+		// {
+		// 	$direction = $this->isTopHalf($winnerMatchIndex, $matchCount) ? 1 : -1;
+		// 	$index = $winnerMatchIndex + ($matchCount * $direction / 2);
+		// }
 
 		// Dritte Runde
-		if ($roundIndex == 3)
-		{
-			$index = $matchCount / 2;
+		// if ($roundIndex == 3)
+		// {
+		// 	$index = $matchCount / 2;
 
-			if (! $this->isTopHalf($winnerMatchIndex, $matchCount))
-			{
-				$index *= 3;
-			}
+		// 	if (! $this->isTopHalf($winnerMatchIndex, $matchCount))
+		// 	{
+		// 		$index *= 3;
+		// 	}
 
-			$index = $index - $winnerMatchIndex + 1;
-		}
+		// 	$index = $index - $winnerMatchIndex + 1;
+		// }
 
 		return intval($index);
 	}
@@ -137,22 +145,14 @@ class EliminationBracketsDoubleKO extends EliminationBrackets
 				{
                     $loserMatches = $nextRound->previousRound->nextLosersRound->matches;
 
-					$index = $this->nextLosersMatchIndex($i + 1, $j, $matches->count());
-                    $loserMatch = $loserMatches->get($index-1);
+					$index = $this->nextLosersMatchIndex($i, $j, $matches->count());
+                    $loserMatch = $loserMatches->get($index);
 					$matches->get($i)->nextLosersMatch()->associate($loserMatch)->save();
 
 					if ($matches->count() > 1)
 					{
-                        if ($loserMatches->count() == 2)
-                        {
-                            $index = 2;
-                        }
-                        else
-                        {
-                            $index = $this->nextLosersMatchIndex($i + 2, $j, $matches->count());
-                        }
-
-						$loserMatch = $loserMatches->get($index-1);
+                        $index = $this->nextLosersMatchIndex($i + 1, $j, $matches->count());
+						$loserMatch = $loserMatches->get($index);
 						$matches->get($i+1)->nextLosersMatch()->associate($loserMatch)->save();
 					}
 				}

@@ -205,6 +205,147 @@ class Match extends Model
         $this->unsetBusyPlayers();
     }
 
+    /**
+     * Reset the match incl. all further actions
+     */
+    public function reset() : void
+    {
+        $this->sets()->delete();
+        factory(Set::class, $this->championship->winningSets())->create(['match_id' => $this->id]);
+
+        if ($this->table_id)
+        {
+            $this->table()->update(['busy' => false]);
+            $this->table_id = null;
+        }
+
+        if ($this->isStarted())
+        {
+            $this->unsetBusyPlayers();
+        }
+
+        if ($this->isFinished())
+        {
+            $loser = $this->getLoser();
+            $winner = $this->getWinner();
+            $loser->decrement('defeats');
+
+            $nextLosersMatch = $this->nextLosersMatch;
+            $nextWinnersMatch = $this->nextMatch;
+
+            if ($this->championship->isDoubleElimination())
+            {
+                if ($this->matchable->name == 'Finale 2')
+                {
+                    if ($this->matchable->nextRound)
+                    {
+                        $this->matchable->nextRound->delete();
+                    }
+                }
+
+                if ($nextLosersMatch)
+                {
+                    $nextLosersMatch->fill([
+                        'status' => self::$PREPARED,
+                        'winner' => 0,
+                        'result_id' => null
+                    ]);
+
+                    $nextLosersMatch->sets()->delete();
+                    factory(Set::class, $this->championship->winningSets())->create(['match_id' => $nextLosersMatch->id]);
+
+                    $matchAfterThis = $nextLosersMatch->nextMatch;
+
+                    if ($nextLosersMatch->p1->is($loser))
+                    {
+                        $nextLosersMatch->p1()->dissociate();
+                    }
+                    elseif ($nextLosersMatch->p2->is($loser))
+                    {
+                        $nextLosersMatch->p2()->dissociate();
+                    }
+
+                    if ($matchAfterThis)
+                    {
+                        $matchAfterThis->sets()->delete();
+                        factory(Set::class, $this->championship->winningSets())->create(['match_id' => $matchAfterThis->id]);
+
+                        $matchAfterThis->fill([
+                            'status' => self::$PREPARED,
+                            'winner' => 0,
+                            'result_id' => null
+                        ]);
+
+                        // If loser was advanced because of a bye
+                        if ($matchAfterThis->p1->is($loser))
+                        {
+                            $matchAfterThis->p1()->dissociate();
+                        }
+                        elseif ($matchAfterThis->p2->is($loser))
+                        {
+                            $matchAfterThis->p2()->dissociate();
+                        }
+
+                        $matchAfterThis->save();
+                    }
+
+                    $nextLosersMatch->save();
+                }
+            }
+
+            if ($nextWinnersMatch)
+            {
+                $nextWinnersMatch->fill([
+                    'status' => self::$PREPARED,
+                    'winner' => 0,
+                    'result_id' => null
+                ]);
+
+                $nextWinnersMatch->sets()->delete();
+                factory(Set::class, $this->championship->winningSets())->create(['match_id' => $nextWinnersMatch->id]);
+
+                if ($nextWinnersMatch->p1->is($winner))
+                {
+                    $nextWinnersMatch->p1()->dissociate();
+                }
+                elseif ($nextWinnersMatch->p2->is($winner))
+                {
+                    $nextWinnersMatch->p2()->dissociate();
+                }
+
+                $nextWinnersMatch->save();
+            }
+
+            if ($this->championship->createThirdPlaceGame($this->matchable))
+            {
+                $nextLosersMatch->fill([
+                    'status' => self::$PREPARED,
+                    'winner' => 0,
+                    'result_id' => null
+                ]);
+                $nextLosersMatch->sets()->delete();
+                factory(Set::class, $this->championship->winningSets())->create(['match_id' => $nextLosersMatch->id]);
+
+                if ($nextLosersMatch->p1->is($loser))
+                {
+                    $nextLosersMatch->p1()->dissociate();
+                }
+                elseif ($nextLosersMatch->p2->is($loser))
+                {
+                    $nextLosersMatch->p2()->dissociate();
+                }
+
+                $nextLosersMatch->save();
+            }
+        }
+
+        $this->fill([
+            'result_id' => null,
+            'status' => self::$PREPARED,
+        ]);
+        $this->save();
+    }
+
     public function determineWinner($resultId)
     {
         if ($this->hasByes())

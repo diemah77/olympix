@@ -35,17 +35,49 @@ export default {
     },
 
     methods: {
-         chunk: chunk
+        chunk: chunk
     },
 
     computed: {
         chunkedTables()
         {
-            const tables = this.chunk(this.tables, Math.ceil(this.tables.length / this.tournament.tables_rows))
+            let tables = this.chunk(this.tables, Math.ceil(this.tables.length / this.tournament.tables_rows))
 
-            if (this.tournament.tables_transponed)
+            if (this.tournament.tables_transformations.some(t => t == 'transpose'))
             {
-                return tables.reduce((r, a, i, { length }) =>
+                tables = tables.reduce((r, a, i, { length }) =>
+                {
+                    a.forEach((v, j) =>
+                    {
+                        r[j] = r[j] || []
+                        r[j][i] = v
+                    })
+
+                    return r
+                }, [])
+            }
+
+            if (this.tournament.tables_transformations.some(t => t == 'reflect_horizontally'))
+            {
+                tables = tables.map(row => row.reverse())
+            }
+
+            if (this.tournament.tables_transformations.some(t => t == 'reflect_vertically'))
+            {
+                tables = tables.reduce((r, a, i, { length }) =>
+                {
+                    a.forEach((v, j) =>
+                    {
+                        r[j] = r[j] || []
+                        r[j][i] = v
+                    })
+
+                    return r
+                }, [])
+
+                tables = tables.map(row => row.reverse())
+
+                tables = tables.reduce((r, a, i, { length }) =>
                 {
                     a.forEach((v, j) =>
                     {

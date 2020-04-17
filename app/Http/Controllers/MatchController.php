@@ -6,6 +6,7 @@ use App\Match;
 use App\Table;
 use App\Tournament;
 use App\Championship;
+use App\Events\MatchReset;
 use App\Events\MatchStarted;
 use App\Events\MatchStopped;
 use App\Rules\ValidMatchSets;
@@ -46,6 +47,15 @@ class MatchController extends Controller
         $match->matchable->phase->proceedMatch($match);
 
         event(new MatchStopped($tournament));
+
+        return response('OK', 200);
+    }
+
+    public function reset(Tournament $tournament, Championship $championship, Match $match)
+    {
+        $match->reset();
+
+        event(new MatchReset($tournament));
 
         return response('OK', 200);
     }
