@@ -17,6 +17,7 @@ class CreatePlayersTable extends Migration
             $table->increments('id');
             $table->string('firstname');
             $table->string('lastname');
+            $table->string('club')->nullable();
             $table->integer('ttr');
             $table->boolean('busy')->default(false);
             $table->unsignedInteger('tournament_id');

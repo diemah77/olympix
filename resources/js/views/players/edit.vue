@@ -18,6 +18,12 @@
                 </div>
 
                 <div class="flex items-center mb-8">
+                    <label class="label w-1/5 text-right mr-8">Verein</label>
+                    <el-input @input="clear('club')" class="w-1/3" v-model="form.club"></el-input>
+                    <span v-if="has('club')" class="ml-3 text-red-600 text-xs">{{ get('lastname') }}</span>
+                </div>
+
+                <div class="flex items-center mb-8">
                     <label class="label w-1/5 text-right mr-8">TTR-Punkte <span class="text-red-600">*</span></label>
                     <el-input @input="clear('ttr')" class="w-1/5" v-model="form.ttr"></el-input>
                     <span v-if="has('ttr')" class="ml-3 text-red-600 text-xs">{{ get('ttr') }}</span>

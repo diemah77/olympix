@@ -20,7 +20,8 @@ class PlayerController extends Controller
                 return [
                     'id' => $p->id,
                     'fullname' => $p->fullname(),
-                    'ttr' => $p->ttr
+                    'ttr' => $p->ttr,
+                    'club' => $p->club
                 ];
             })
         ]);
@@ -32,6 +33,7 @@ class PlayerController extends Controller
             'player' => [
                 'firstname' => '',
                 'lastname' => '',
+                'club' => '',
                 'ttr' => '',
             ],
             'mode' => 'create'
@@ -43,6 +45,7 @@ class PlayerController extends Controller
         $data = $this->validate(request(), [
             'firstname' => 'required',
             'lastname' => 'required',
+            'club' => '',
             'ttr' => 'required|numeric|min:800'
         ]);
 
@@ -59,6 +62,7 @@ class PlayerController extends Controller
                 'firstname' => $player->firstname,
                 'lastname' => $player->lastname,
                 'fullname' => $player->firstname . ' ' . $player->lastname,
+                'club' => $player->club,
                 'ttr' => $player->ttr,
                 'championships' => $player->championships // TODO: transform
             ],
@@ -72,6 +76,7 @@ class PlayerController extends Controller
         $data = $this->validate(request(), [
             'firstname' => 'required',
             'lastname' => 'required',
+            'club' => 'required',
             'ttr' => 'required|numeric|min:800'
         ]);
 
@@ -89,7 +94,8 @@ class PlayerController extends Controller
             return [
                 'id' => $p->id,
                 'fullname' => $p->fullname(),
-                'ttr' => $p->ttr
+                'ttr' => $p->ttr,
+                'club' => $p->club
             ];
         });
     }

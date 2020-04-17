@@ -82,6 +82,12 @@
             </el-table-column>
 
             <el-table-column
+                label="Verein"
+                sortable
+                property="club">
+            </el-table-column>
+
+            <el-table-column
                 label-class-name="text-center"
                 class-name="text-center">
 
