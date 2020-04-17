@@ -114,6 +114,7 @@ class ChampionshipController extends Controller
         $championship->load('registrations');
 
         $players = $tournament->players()
+            ->orderByRaw('LENGTH(lastname) asc')
             ->orderBy('lastname')
             ->orderBy('firstname')
             ->get()
