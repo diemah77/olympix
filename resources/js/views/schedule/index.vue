@@ -75,17 +75,6 @@
         </el-button>
     </div>
 
-    <!-- <el-dialog
-        @close="resetDialog"
-        :title="dialogTitle"
-        :visible.sync="dialogVisible"
-        width="50%"
-        append-to-body
-        :modal="true">
-
-        <match :match="match" :tables="freeTables"></match>
-    </el-dialog> -->
-
     <match
         :visible.sync="dialogVisible"
         :match="match"

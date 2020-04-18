@@ -35,4 +35,14 @@ class Set extends Model
     {
     	return !$this->isNegative();
     }
+
+    public function displayPoints()
+    {
+        if (intval($this->points) == 0)
+        {
+            return 0;
+        }
+
+        return $this->points > 0 ? '+' . $this->points : $this->points;
+    }
 }

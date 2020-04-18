@@ -16,6 +16,7 @@ module.exports = {
         default: '#000',
         'light': '#111',
         '10': 'rgba(0,0,0,0.1)',
+        '40': 'rgba(0,0,0,0.4)',
         '60': 'rgba(0,0,0,0.6)',
       },
       white: '#fff',

@@ -120,8 +120,12 @@ class ScheduleController extends Controller
                 'isRegular' => $m->isRegular(),
                 'handicap' => $m->handicap(),
                 'relevant' => $m->isStarted() || ($hasFreeTables && $m->isRegular() && !$m->isFinished() && !$m->hasInvolvedPlayers()),
-                'p1' => $m->p1 ? $m->p1->fullname() : '',
-                'p2' => $m->p2 ? $m->p2->fullname() : '',
+                'p1' => [
+                    'fullname' => $m->p1 ? $m->p1->fullname() : '',
+                ],
+                'p2' => [
+                    'fullname' => $m->p2 ? $m->p2->fullname() : '',
+                ],
                 'phase' => $m->matchable->phase->phase->name(),
                 'matchable' => $m->matchable->getName(),
                 'result' => $m->result ? $m->result->label() : '',
@@ -235,11 +239,25 @@ class ScheduleController extends Controller
                         {
                             return [
                                 'id' => $m->id,
+                                'championship' => $m->championship->name,
+                                'championship_id' => $m->championship_id,
+                                'matchable' => $m->matchable->getName(),
                                 'winner' => $m->winner,
+                                'isStarted' => $m->isStarted(),
+                                'isRegular' => $m->isRegular(),
+                                'statusName' => $m->statusName(),
+                                'handicap' => $m->handicap(),
+                                'result_id' => $m->result_id,
+                                'table_id' => $m->table_id,
                                 'result' => [
                                     'left' => $m->leftResult(),
                                     'right' => $m->rightResult(),
-                                    'sets' => $m->sets
+                                    'sets' => $m->sets->map(function ($set)
+                                    {
+                                        return [
+                                            'points' => $set->displayPoints()
+                                        ];
+                                    })
                                 ],
                                 'p1' => [
                                     'id' => $m->p1 ? $m->p1->id : '',
@@ -250,7 +268,8 @@ class ScheduleController extends Controller
                                     'id' => $m->p2 ? $m->p2->id : '',
                                     'isBye' => $m->p2 ? $m->p2->isBye() : true,
                                     'fullname' => $m->p2 ? $m->p2->fullname() : '&nbsp;',
-                                ]
+                                ],
+                                'sets' => $m->sets
                             ];
                         })->values()
                     ];
@@ -271,6 +290,22 @@ class ScheduleController extends Controller
                     ];
                 })
             ],
+            'tables' => $tournament->tables()->orderBy('id')->get()->transform(function ($t)
+            {
+                return [
+                    'id' => $t->id,
+                    'name' => $t->displayName(),
+                    'busy' => $t->busy
+                ];
+            }),
+            'results' => $championship->results()->transform(function($r)
+            {
+                return [
+                    'id' => $r->id,
+                    'label' => $r->label(),
+                    'setCount' => $r->setCount()
+                ];
+            }),
             'phase' => [
                 'id' => $phase->id,
                 'name' => $phase->name(),

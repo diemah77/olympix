@@ -13,9 +13,9 @@
 
     <div>
         <div class="flex items-center mb-6">
-            <span class="mr-3 font-bold">{{ localMatch.p1 }}</span>
+            <span class="mr-3 font-bold">{{ localMatch.p1.fullname }}</span>
             <span class="mr-3">-</span>
-            <span class="font-bold">{{ localMatch.p2 }}</span>
+            <span class="font-bold">{{ localMatch.p2.fullname }}</span>
             <div v-if="localMatch.handicap" class="font-bold ml-6 py-1 px-2 bg-orange-200 rounded">{{ localMatch.handicap }}</div>
         </div>
 
@@ -160,7 +160,17 @@ export default {
         {
             this.localMatch = newVal
             this.activeTab = newVal.isStarted ? 'stop' : 'start'
+        },
+
+        visible(newVal)
+        {
+            this.activeTab = this.match.isStarted ? 'stop' : 'start'
         }
+    },
+
+    created()
+    {
+        this.activeTab = this.match.isStarted ? 'stop' : 'start'
     },
 
     data()
@@ -192,14 +202,9 @@ export default {
             return this.localMatch.result_id ? this.results.find(r => r.id == this.localMatch.result_id).setCount : this.localMatch.winningSets
         },
 
-        orderedTables()
-        {
-            return sort(this.tables).asc(t => t.name)
-        },
-
         freeTables()
         {
-            return this.orderedTables.filter(t => t.busy == false || t.id == this.localMatch.table_id)
+            return this.tables.filter(t => t.busy == false || t.id == this.localMatch.table_id)
         },
     },
 
